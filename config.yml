@@ -1,0 +1,9 @@
+server:
+  port: 8080
+
+postgres:
+  host: postgres_cafe_container
+  port: 5432
+  username: miladooo
+  password: 123qwe123
+  db_name: cafe

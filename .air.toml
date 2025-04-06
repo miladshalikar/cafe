@@ -1,0 +1,16 @@
+root = "."
+
+[build]
+
+bin = "tmp/app.exe"
+
+cmd = "go build -o ./tmp/app.exe ./."
+
+delay = 5000
+
+watch_dirs = ["./"]
+include_ext = ["go", "tpl", "tmpl", "html"]
+exclude_dir = ["assets", "tmp", ".git"]
+
+poll = true
+poll_interval = 500

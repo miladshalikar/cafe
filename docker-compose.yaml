@@ -1,0 +1,54 @@
+version: "3.8"
+services:
+  app:
+    image: cafe_image:1
+    container_name: cafe_container
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/app
+    networks:
+      - cafe
+
+  postgres:
+    image: postgres:17.2
+    container_name: postgres_cafe_container
+    environment:
+      POSTGRES_USER: miladooo
+      POSTGRES_PASSWORD: 123qwe123
+      POSTGRES_DB: cafe
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - cafe
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4:8.14
+    container_name: pgadmin_container
+    environment:
+      PGADMIN_DEFAULT_EMAIL: miladsh199@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: 123456
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    ports:
+      - "8090:80"
+    networks:
+      - cafe
+    restart: unless-stopped
+    depends_on:
+      - postgres
+
+volumes:
+  app:
+  postgres:
+  pgadmin:
+
+networks:
+  cafe:
