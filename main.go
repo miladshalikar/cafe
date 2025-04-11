@@ -3,15 +3,15 @@ package main
 import (
 	"fmt"
 	"github.com/miladshalikar/cafe/config"
-	"github.com/miladshalikar/cafe/repository/postgreSQL"
+	"github.com/miladshalikar/cafe/repository/migrator"
 )
 
 func main() {
 
-	fmt.Println("fssssaa")
+	fmt.Println("faasssaa")
 
 	cfg := config.C()
-	postgreSQL.InitDb(cfg.Postgres)
+	m := migrator.New(cfg.Postgres)
+	m.Up()
 
-	//api.InitServer(cfg.Server)
 }

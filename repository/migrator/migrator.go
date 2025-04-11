@@ -14,13 +14,13 @@ type Migrator struct {
 }
 
 func New(dbConfig postgreSQL.Config) Migrator {
-	migrations := &migrate.FileMigrationSource{Dir: "repository/postgres/migration"}
+	migrations := &migrate.FileMigrationSource{Dir: "repository/postgreSQL/migration"}
 	return Migrator{dbConfig: dbConfig, migrations: migrations, dialect: "postgres"}
 }
 
 func (m Migrator) Up() {
-	cnn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s TimeZone=Asia/Tehran",
-		m.dbConfig.Host, m.dbConfig.Port, m.dbConfig.Username, m.dbConfig.Password, m.dbConfig.DBName)
+	cnn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s TimeZone=Asia/Tehran",
+		m.dbConfig.Host, m.dbConfig.Port, m.dbConfig.Username, m.dbConfig.Password, m.dbConfig.DBName, m.dbConfig.SSLMode)
 
 	fmt.Println("postgres add= ", cnn)
 
@@ -37,8 +37,8 @@ func (m Migrator) Up() {
 }
 
 func (m Migrator) Down() {
-	cnn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s TimeZone=Asia/Tehran",
-		m.dbConfig.Host, m.dbConfig.Port, m.dbConfig.Username, m.dbConfig.Password, m.dbConfig.DBName)
+	cnn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s TimeZone=Asia/Tehran",
+		m.dbConfig.Host, m.dbConfig.Port, m.dbConfig.Username, m.dbConfig.Password, m.dbConfig.DBName, m.dbConfig.SSLMode)
 
 	db, err := sql.Open(m.dialect, cnn)
 	if err != nil {

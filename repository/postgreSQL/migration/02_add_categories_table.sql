@@ -10,4 +10,4 @@ CREATE TABLE IF NOT EXISTS categories
 );
 
 -- +migrate Down
-DROP TABLE `categories`;
+DROP TABLE categories;

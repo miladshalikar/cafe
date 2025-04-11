@@ -7,3 +7,4 @@ postgres:
   username: miladooo
   password: 123qwe123
   db_name: cafe
+  ssl_mode: disable
