@@ -1,14 +1,14 @@
 package main
 
 import (
-	"cafe/config"
-	"cafe/repository/postgreSQL"
 	"fmt"
+	"github.com/miladshalikar/cafe/config"
+	"github.com/miladshalikar/cafe/repository/postgreSQL"
 )
 
 func main() {
 
-	fmt.Println("fsss")
+	fmt.Println("fssssaa")
 
 	cfg := config.C()
 	postgreSQL.InitDb(cfg.Postgres)

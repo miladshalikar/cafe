@@ -1,9 +1,9 @@
 package api
 
 import (
-	"cafe/config"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/miladshalikar/cafe/config"
 	"net/http"
 )
 

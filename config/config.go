@@ -1,6 +1,6 @@
 package config
 
-import "cafe/repository/postgreSQL"
+import "github.com/miladshalikar/cafe/repository/postgreSQL"
 
 type ServerConfig struct {
 	Port int `koanf:"port"`
