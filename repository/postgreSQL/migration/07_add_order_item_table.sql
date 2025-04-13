@@ -1,5 +1,5 @@
 -- +migrate Up
-CREATE TABLE IF NOT EXISTS roles_item
+CREATE TABLE IF NOT EXISTS order_item
 (
     id SERIAL PRIMARY KEY,
     order_id INT,
@@ -20,4 +20,4 @@ CREATE TABLE IF NOT EXISTS roles_item
 );
 
 -- +migrate Down
-DROP TABLE IF EXISTS roles_item;
+DROP TABLE IF EXISTS order_item;

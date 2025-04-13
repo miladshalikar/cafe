@@ -22,7 +22,7 @@ func (m Migrator) Up() {
 	cnn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s TimeZone=Asia/Tehran",
 		m.dbConfig.Host, m.dbConfig.Port, m.dbConfig.Username, m.dbConfig.Password, m.dbConfig.DBName, m.dbConfig.SSLMode)
 
-	fmt.Println("postgres add= ", cnn)
+	fmt.Printf("postgres add= %+v\n", cnn)
 
 	db, err := sql.Open(m.dialect, cnn)
 	if err != nil {
