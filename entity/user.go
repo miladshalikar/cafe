@@ -9,6 +9,7 @@ type User struct {
 	Email       string `json:"email"`
 	PhoneNumber string `json:"phone_number"`
 	password    string
+	isSuperUser bool
 	CreatedAt   time.Time  `json:"created_at"`
 	UpdatedAt   time.Time  `json:"updated_at"`
 	DeletedAt   *time.Time `json:"deleted_at"`
