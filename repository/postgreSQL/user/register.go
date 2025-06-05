@@ -18,3 +18,13 @@ func (u *UserDB) CreateUser(ctx context.Context, user entity.User) (entity.User,
 	}
 	return user, nil
 }
+
+func (u *UserDB) PhoneNumberExistInDB(ctx context.Context, phoneNumber string) (bool, error) {
+	//TODO implement me
+	panic("implement mee")
+}
+
+func (u *UserDB) EmailExistInDB(ctx context.Context, email string) (bool, error) {
+	//TODO implement me
+	panic("implement meee")
+}
