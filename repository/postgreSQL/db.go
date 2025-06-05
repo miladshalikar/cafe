@@ -31,7 +31,7 @@ const (
 	dbMaxConnLifetime = time.Minute * 3
 )
 
-func InitDb(cfg Config) *DB {
+func New(cfg Config) *DB {
 
 	cnn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s TimeZone=Asia/Tehran",
 		cfg.Host, cfg.Port, cfg.Username, cfg.Password,

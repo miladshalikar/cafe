@@ -3,16 +3,16 @@ package entity
 import "time"
 
 type User struct {
-	Id          uint   `json:"id"`
-	FirstName   string `json:"first_name"`
-	LastName    string `json:"last_name"`
-	Email       string `json:"email"`
-	PhoneNumber string `json:"phone_number"`
+	Id          uint
+	FirstName   string
+	LastName    string
+	Email       string
+	PhoneNumber string
 	password    string
 	isSuperUser bool
-	CreatedAt   time.Time  `json:"created_at"`
-	UpdatedAt   time.Time  `json:"updated_at"`
-	DeletedAt   *time.Time `json:"deleted_at"`
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+	DeletedAt   *time.Time
 }
 
 func (u *User) GetPassword() string {

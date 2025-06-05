@@ -8,3 +8,10 @@ postgres:
   password: 123qwe123
   db_name: cafe
   ssl_mode: disable
+
+token:
+  sign_key: miladooo
+  access_expiration_time: 5m
+  refresh_expiration_time: 1h
+  access_subject: access
+  refresh_subject: refresh
