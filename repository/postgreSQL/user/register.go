@@ -1,18 +1,20 @@
 package userpostgresql
 
 import (
-	"database/sql"
+	"context"
 	"github.com/miladshalikar/cafe/entity"
 )
 
-type UserDB struct {
-	conn *sql.DB
-}
+func (u *UserDB) CreateUser(ctx context.Context, user entity.User) (entity.User, error) {
 
-func New(con *sql.DB) UserDB {
-	return UserDB{conn: con}
-}
+	query := `INSERT INTO users (first_name, last_name, email, phone_number, password)
+				VALUES ($1, $2, $3, $4, $5)
+				RETURNING id`
 
-func (u *UserDB) CreateUser(user entity.User) (entity.User, error) {
-	panic("implement me")
+	err := u.conn.QueryRowContext(ctx, query, user.FirstName, user.LastName,
+		user.Email, user.PhoneNumber, user.GetPassword()).Scan(&user.Id)
+	if err != nil {
+		return entity.User{}, err
+	}
+	return user, nil
 }

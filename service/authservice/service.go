@@ -1,6 +1,7 @@
 package authservice
 
 import (
+	"context"
 	"github.com/miladshalikar/cafe/entity"
 )
 
@@ -15,7 +16,7 @@ type Tokens interface {
 }
 
 type Repository interface {
-	CreateUser(entity.User) (entity.User, error)
+	CreateUser(context.Context, entity.User) (entity.User, error)
 }
 
 func New(r Repository, t Tokens) Service {

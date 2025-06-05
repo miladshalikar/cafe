@@ -1,12 +1,13 @@
 package authservice
 
 import (
+	"context"
 	"github.com/miladshalikar/cafe/entity"
 	param "github.com/miladshalikar/cafe/param/authservice"
 	"golang.org/x/crypto/bcrypt"
 )
 
-func (s Service) Register(req param.RegisterRequest) (param.RegisterResponse, error) {
+func (s Service) Register(ctx context.Context, req param.RegisterRequest) (param.RegisterResponse, error) {
 
 	u := entity.User{
 		FirstName:   req.FirstName,
@@ -20,7 +21,7 @@ func (s Service) Register(req param.RegisterRequest) (param.RegisterResponse, er
 	}
 	u.SetPassword(string(hashedPassword))
 
-	uu, err := s.Repo.CreateUser(u)
+	uu, err := s.Repo.CreateUser(ctx, u)
 	if err != nil {
 		return param.RegisterResponse{}, err
 	}
