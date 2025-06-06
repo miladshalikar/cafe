@@ -2,7 +2,7 @@ package config
 
 import (
 	"github.com/miladshalikar/cafe/repository/postgreSQL"
-	tokenservice "github.com/miladshalikar/cafe/service/token"
+	usertokenauthservice "github.com/miladshalikar/cafe/service/user/token"
 )
 
 type ServerConfig struct {
@@ -12,5 +12,5 @@ type ServerConfig struct {
 type Config struct {
 	Server   ServerConfig
 	Postgres postgreSQL.Config
-	Token    tokenservice.Config
+	Token    usertokenauthservice.Config
 }

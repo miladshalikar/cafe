@@ -1,4 +1,4 @@
-package tokenservice
+package usertokenauthservice
 
 import (
 	"github.com/golang-jwt/jwt/v5"

@@ -1,6 +1,7 @@
 package userauthvalidator
 
 import (
+	"errors"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	param "github.com/miladshalikar/cafe/param/authservice"
 	"regexp"
@@ -23,16 +24,16 @@ func (v Validator) ValidateRegisterRequest(req param.RegisterRequest) (map[strin
 			validation.By(v.isPhoneNumberExistInDB)),
 		validation.Field(&req.Password, validation.Required, validation.Length(6, 100))); err != nil {
 
-		//fieldErrors := make(map[string]string)
-		//vErr := validation.Errors{}
-		//if errors.As(err, &vErr) {
-		//	for key, value := range vErr {
-		//		if value != nil {
-		//			fieldErrors[key] = value.Error()
-		//		}
-		//	}
-		//}
-		return nil, err
+		fieldErrors := make(map[string]string)
+		vErr := validation.Errors{}
+		if errors.As(err, &vErr) {
+			for key, value := range vErr {
+				if value != nil {
+					fieldErrors[key] = value.Error()
+				}
+			}
+		}
+		return fieldErrors, err
 	}
 	return nil, nil
 }
