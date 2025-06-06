@@ -17,6 +17,7 @@ type Tokens interface {
 
 type Repository interface {
 	CreateUser(context.Context, entity.User) (entity.User, error)
+	GetUserByEmail(context.Context, string) (entity.User, error)
 }
 
 func New(r Repository, t Tokens) Service {

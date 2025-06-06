@@ -1,5 +1,7 @@
 package authserviceparam
 
+import "github.com/miladshalikar/cafe/entity"
+
 type RegisterRequest struct {
 	FirstName   string `json:"first_name"`
 	LastName    string `json:"last_name"`
@@ -9,6 +11,6 @@ type RegisterRequest struct {
 }
 
 type RegisterResponse struct {
-	UserID uint   `json:"user_id"`
-	Tokens Tokens `json:"tokens"`
+	User   entity.User `json:"user"`
+	Tokens Tokens      `json:"tokens"`
 }

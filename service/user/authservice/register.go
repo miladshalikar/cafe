@@ -37,7 +37,7 @@ func (s Service) Register(ctx context.Context, req param.RegisterRequest) (param
 	}
 
 	return param.RegisterResponse{
-		UserID: uu.Id,
+		User: uu,
 		Tokens: param.Tokens{
 			AccessToken:  at,
 			RefreshToken: rt,

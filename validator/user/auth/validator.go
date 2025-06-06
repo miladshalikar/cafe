@@ -2,7 +2,6 @@ package userauthvalidator
 
 import (
 	"context"
-	"errors"
 )
 
 const (
@@ -21,34 +20,4 @@ type Validator struct {
 
 func New(r Repository) Validator {
 	return Validator{repo: r}
-}
-
-func (v Validator) isEmailExistInDB(value interface{}) error {
-	email, ok := value.(string)
-	if !ok {
-		return errors.New("something went wrong")
-	}
-	existed, err := v.repo.EmailExistInDB(context.Background(), email)
-	if err != nil {
-		return errors.New("something went wrong")
-	}
-	if existed {
-		return errors.New("user exist")
-	}
-	return nil
-}
-
-func (v Validator) isPhoneNumberExistInDB(value interface{}) error {
-	phoneNumber, ok := value.(string)
-	if !ok {
-		return errors.New("something went wrong")
-	}
-	existed, err := v.repo.PhoneNumberExistInDB(context.Background(), phoneNumber)
-	if err != nil {
-		return errors.New("something went wrong")
-	}
-	if existed {
-		return errors.New("user exist")
-	}
-	return nil
 }

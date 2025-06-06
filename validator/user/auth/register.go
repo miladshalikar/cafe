@@ -1,6 +1,7 @@
 package userauthvalidator
 
 import (
+	"context"
 	"errors"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	param "github.com/miladshalikar/cafe/param/authservice"
@@ -36,4 +37,34 @@ func (v Validator) ValidateRegisterRequest(req param.RegisterRequest) (map[strin
 		return fieldErrors, err
 	}
 	return nil, nil
+}
+
+func (v Validator) isEmailExistInDB(value interface{}) error {
+	email, ok := value.(string)
+	if !ok {
+		return errors.New("something went wrong1")
+	}
+	existed, err := v.repo.EmailExistInDB(context.Background(), email)
+	if err != nil {
+		return errors.New("something went wrong2")
+	}
+	if existed {
+		return errors.New("email exist")
+	}
+	return nil
+}
+
+func (v Validator) isPhoneNumberExistInDB(value interface{}) error {
+	phoneNumber, ok := value.(string)
+	if !ok {
+		return errors.New("something went wrong")
+	}
+	existed, err := v.repo.PhoneNumberExistInDB(context.Background(), phoneNumber)
+	if err != nil {
+		return errors.New("something went wrong")
+	}
+	if existed {
+		return errors.New("phoneNumber exist")
+	}
+	return nil
 }
