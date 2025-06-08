@@ -30,7 +30,7 @@ services:
     restart: unless-stopped
 
   pgadmin:
-    image: dpage/pgadmin4:8.14
+    image: dpage/pgadmin4:9.2.0
     container_name: pgadmin_container
     environment:
       PGADMIN_DEFAULT_EMAIL: miladsh199@gmail.com

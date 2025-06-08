@@ -13,11 +13,16 @@ type Config struct {
 	Username string `koanf:"username"`
 	Password string `koanf:"password"`
 	DBName   string `koanf:"db_name"`
+	SSLMode  string `koanf:"ssl_mode"`
 }
 
 type DB struct {
 	config Config
 	db     *sql.DB
+}
+
+func (m DB) Conn() *sql.DB {
+	return m.db
 }
 
 const (
@@ -26,11 +31,11 @@ const (
 	dbMaxConnLifetime = time.Minute * 3
 )
 
-func InitDb(cfg Config) *DB {
+func New(cfg Config) *DB {
 
-	cnn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s TimeZone=Asia/Tehran",
+	cnn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s TimeZone=Asia/Tehran",
 		cfg.Host, cfg.Port, cfg.Username, cfg.Password,
-		cfg.DBName)
+		cfg.DBName, cfg.SSLMode)
 
 	dbClient, err := sql.Open("postgres", cnn)
 	if err != nil {
