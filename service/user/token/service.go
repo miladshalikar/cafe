@@ -15,7 +15,7 @@ type Config struct {
 
 type Claims struct {
 	jwt.RegisteredClaims
-	AdminID uint `json:"admin_id"`
+	UserID uint `json:"admin_id"`
 }
 
 type Service struct {
@@ -40,7 +40,7 @@ func (s Service) createToken(userID uint, subject string, expireDuration time.Du
 			Subject:   subject,
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(expireDuration)),
 		},
-		AdminID: userID,
+		UserID: userID,
 	}
 	accessToken := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := accessToken.SignedString([]byte(s.config.SignKey))
