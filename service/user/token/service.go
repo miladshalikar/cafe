@@ -15,7 +15,7 @@ type Config struct {
 
 type Claims struct {
 	jwt.RegisteredClaims
-	UserID uint `json:"admin_id"`
+	UserID uint `json:"user_id"`
 }
 
 type Service struct {
@@ -26,12 +26,12 @@ func New(cfg Config) Service {
 	return Service{config: cfg}
 }
 
-func (s Service) CreateAccessToken(adminID uint) (string, error) {
-	return s.createToken(adminID, s.config.AccessSubject, s.config.AccessExpirationTime)
+func (s Service) CreateAccessToken(userID uint) (string, error) {
+	return s.createToken(userID, s.config.AccessSubject, s.config.AccessExpirationTime)
 }
 
-func (s Service) CreateRefreshToken(adminID uint) (string, error) {
-	return s.createToken(adminID, s.config.RefreshSubject, s.config.RefreshExpirationTime)
+func (s Service) CreateRefreshToken(userID uint) (string, error) {
+	return s.createToken(userID, s.config.RefreshSubject, s.config.RefreshExpirationTime)
 }
 
 func (s Service) createToken(userID uint, subject string, expireDuration time.Duration) (string, error) {
