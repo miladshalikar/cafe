@@ -13,7 +13,7 @@ func (h Handler) RegisterUser(ctx echo.Context) error {
 		return ctx.JSON(http.StatusBadRequest, bErr)
 	}
 
-	if fieldErrors, err := h.userAuthVld.ValidateRegisterRequest(req); err != nil {
+	if fieldErrors, err := h.userAuthVld.ValidateRegisterRequest(ctx.Request().Context(), req); err != nil {
 		return ctx.JSON(http.StatusBadRequest, fieldErrors)
 	}
 

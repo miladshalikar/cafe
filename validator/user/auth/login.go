@@ -8,13 +8,13 @@ import (
 	"regexp"
 )
 
-func (v Validator) ValidateLoginWithEmailRequest(req param.LoginWithEmailRequest) (map[string]string, error) {
-	if err := validation.ValidateStruct(&req,
+func (v Validator) ValidateLoginWithEmailRequest(ctx context.Context, req param.LoginWithEmailRequest) (map[string]string, error) {
+	if err := validation.ValidateStructWithContext(ctx, &req,
 		validation.Field(&req.Password, validation.Required, validation.NotNil),
 		validation.Field(&req.Email,
 			validation.Required,
 			validation.Match(regexp.MustCompile(emailRegex)).Error("invalid email address"),
-			validation.By(v.isUserExist))); err != nil {
+			validation.WithContext(v.isUserExist))); err != nil {
 
 		fieldErrors := make(map[string]string)
 		vErr := validation.Errors{}
@@ -30,14 +30,14 @@ func (v Validator) ValidateLoginWithEmailRequest(req param.LoginWithEmailRequest
 	return nil, nil
 }
 
-func (v Validator) isUserExist(value interface{}) error {
+func (v Validator) isUserExist(ctx context.Context, value interface{}) error {
 
 	email, ok := value.(string)
 	if !ok {
 		return errors.New("something went wrong")
 	}
 
-	existed, err := v.repo.EmailExistInDB(context.Background(), email)
+	existed, err := v.repo.EmailExistInDB(ctx, email)
 	if err != nil {
 		return errors.New("user not exist")
 	}
