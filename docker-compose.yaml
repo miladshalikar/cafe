@@ -3,6 +3,11 @@ services:
   app:
     image: cafe_image:1
     container_name: cafe_container
+    environment:
+      - MA_POSTGRES__USERNAME=miladooo
+      - MA_POSTGRES__PASSWORD=123qwe123
+      - MA_POSTGRES__PORT=5432
+      - MA_TOKEN__SIGN_KEY=miladooo
     build:
       context: .
       dockerfile: Dockerfile
