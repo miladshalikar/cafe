@@ -5,4 +5,6 @@ const (
 	defaultDelimiter    = "."
 	defaultSeparator    = "__"
 	defaultYamlFilePath = "config.yml"
+
+	AuthMiddlewareContextKey = "claims"
 )
