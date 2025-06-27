@@ -8,21 +8,21 @@ import (
 	"regexp"
 )
 
-func (v Validator) ValidateRegisterRequest(req param.RegisterRequest) (map[string]string, error) {
+func (v Validator) ValidateRegisterRequest(ctx context.Context, req param.RegisterRequest) (map[string]string, error) {
 
-	if err := validation.ValidateStruct(&req,
+	if err := validation.ValidateStructWithContext(ctx, &req,
 		validation.Field(&req.FirstName, validation.Required, validation.Length(2, 50)),
 		validation.Field(&req.LastName, validation.Required, validation.Length(2, 50)),
 		validation.Field(&req.Email,
 			validation.Required,
 			validation.Length(5, 100),
 			validation.Match(regexp.MustCompile(emailRegex)).Error("invalid email address"),
-			validation.By(v.isEmailExistInDB)),
+			validation.WithContext(v.isEmailExistInDB)),
 		validation.Field(&req.PhoneNumber,
 			validation.Required,
 			validation.Length(5, 100),
 			validation.Match(regexp.MustCompile(phoneNumberRegex)).Error("invalid phone number"),
-			validation.By(v.isPhoneNumberExistInDB)),
+			validation.WithContext(v.isPhoneNumberExistInDB)),
 		validation.Field(&req.Password, validation.Required, validation.Length(6, 100))); err != nil {
 
 		fieldErrors := make(map[string]string)
@@ -39,12 +39,12 @@ func (v Validator) ValidateRegisterRequest(req param.RegisterRequest) (map[strin
 	return nil, nil
 }
 
-func (v Validator) isEmailExistInDB(value interface{}) error {
+func (v Validator) isEmailExistInDB(ctx context.Context, value interface{}) error {
 	email, ok := value.(string)
 	if !ok {
 		return errors.New("something went wrong1")
 	}
-	existed, err := v.repo.EmailExistInDB(context.Background(), email)
+	existed, err := v.repo.EmailExistInDB(ctx, email)
 	if err != nil {
 		return errors.New("something went wrong2")
 	}
@@ -54,12 +54,12 @@ func (v Validator) isEmailExistInDB(value interface{}) error {
 	return nil
 }
 
-func (v Validator) isPhoneNumberExistInDB(value interface{}) error {
+func (v Validator) isPhoneNumberExistInDB(ctx context.Context, value interface{}) error {
 	phoneNumber, ok := value.(string)
 	if !ok {
 		return errors.New("something went wrong")
 	}
-	existed, err := v.repo.PhoneNumberExistInDB(context.Background(), phoneNumber)
+	existed, err := v.repo.PhoneNumberExistInDB(ctx, phoneNumber)
 	if err != nil {
 		return errors.New("something went wrong")
 	}

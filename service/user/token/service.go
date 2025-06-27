@@ -2,6 +2,7 @@ package usertokenauthservice
 
 import (
 	"github.com/golang-jwt/jwt/v5"
+	"strings"
 	"time"
 )
 
@@ -49,4 +50,26 @@ func (s Service) createToken(userID uint, subject string, expireDuration time.Du
 	}
 
 	return tokenString, nil
+}
+
+func (s Service) ParseToken(bearerToken string) (*Claims, error) {
+
+	tokenStr := strings.Replace(bearerToken, "Bearer ", "", 1)
+
+	token, err := jwt.ParseWithClaims(tokenStr, &Claims{}, func(token *jwt.Token) (interface{}, error) {
+		return []byte(s.config.SignKey), nil
+	},
+		jwt.WithLeeway(5*time.Second),
+		jwt.WithSubject(s.config.AccessSubject),
+	)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if claims, ok := token.Claims.(*Claims); ok && token.Valid {
+		return claims, nil
+	}
+
+	return nil, err
 }

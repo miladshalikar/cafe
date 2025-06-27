@@ -13,7 +13,7 @@ func (h Handler) LoginUserByEmail(ctx echo.Context) error {
 		return ctx.JSON(http.StatusBadRequest, bErr)
 	}
 
-	if fieldErrors, err := h.userAuthVld.ValidateLoginWithEmailRequest(req); err != nil {
+	if fieldErrors, err := h.userAuthVld.ValidateLoginWithEmailRequest(ctx.Request().Context(), req); err != nil {
 		return ctx.JSON(http.StatusBadRequest, fieldErrors)
 	}
 
