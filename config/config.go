@@ -10,7 +10,7 @@ type ServerConfig struct {
 }
 
 type Config struct {
-	Server   ServerConfig
-	Postgres postgreSQL.Config
-	Token    usertokenauthservice.Config
+	Server   ServerConfig                `koanf:"server"`
+	Postgres postgreSQL.Config           `koanf:"postgres"`
+	Token    usertokenauthservice.Config `koanf:"token"`
 }
