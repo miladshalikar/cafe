@@ -6,8 +6,8 @@ import (
 )
 
 type Service struct {
-	Repo   Repository
-	Tokens Tokens
+	repo   Repository
+	tokens Tokens
 }
 
 type Tokens interface {
