@@ -1,4 +1,4 @@
-package authserviceparam
+package userauthserviceparam
 
 import "github.com/miladshalikar/cafe/entity"
 

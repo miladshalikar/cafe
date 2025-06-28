@@ -2,34 +2,34 @@ package userauthservice
 
 import (
 	"context"
-	param "github.com/miladshalikar/cafe/param/authservice"
+	"github.com/miladshalikar/cafe/param/user/authservice"
 	"golang.org/x/crypto/bcrypt"
 )
 
-func (s Service) LoginWithEmail(ctx context.Context, req param.LoginWithEmailRequest) (param.LoginWithEmailResponse, error) {
+func (s Service) LoginWithEmail(ctx context.Context, req userauthserviceparam.LoginWithEmailRequest) (userauthserviceparam.LoginWithEmailResponse, error) {
 
-	user, uErr := s.Repo.GetUserByEmail(ctx, req.Email)
+	user, uErr := s.repo.GetUserByEmail(ctx, req.Email)
 	if uErr != nil {
-		return param.LoginWithEmailResponse{}, uErr
+		return userauthserviceparam.LoginWithEmailResponse{}, uErr
 	}
 
 	if cErr := bcrypt.CompareHashAndPassword([]byte(user.GetPassword()), []byte(req.Password)); cErr != nil {
-		return param.LoginWithEmailResponse{}, cErr
+		return userauthserviceparam.LoginWithEmailResponse{}, cErr
 	}
 
-	at, aErr := s.Tokens.CreateAccessToken(user.Id)
+	at, aErr := s.tokens.CreateAccessToken(user.Id)
 	if aErr != nil {
-		return param.LoginWithEmailResponse{}, aErr
+		return userauthserviceparam.LoginWithEmailResponse{}, aErr
 	}
 
-	rt, rErr := s.Tokens.CreateRefreshToken(user.Id)
+	rt, rErr := s.tokens.CreateRefreshToken(user.Id)
 	if rErr != nil {
-		return param.LoginWithEmailResponse{}, rErr
+		return userauthserviceparam.LoginWithEmailResponse{}, rErr
 	}
 
-	return param.LoginWithEmailResponse{
+	return userauthserviceparam.LoginWithEmailResponse{
 		User: user,
-		Tokens: param.Tokens{
+		Tokens: userauthserviceparam.Tokens{
 			AccessToken:  at,
 			RefreshToken: rt,
 		},
