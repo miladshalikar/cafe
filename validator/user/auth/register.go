@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
-	param "github.com/miladshalikar/cafe/param/authservice"
+	param "github.com/miladshalikar/cafe/param/user/authservice"
 	"regexp"
 )
 

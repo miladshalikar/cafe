@@ -2,7 +2,7 @@ package userauthhandler
 
 import (
 	"github.com/labstack/echo/v4"
-	param "github.com/miladshalikar/cafe/param/authservice"
+	param "github.com/miladshalikar/cafe/param/user/authservice"
 	"net/http"
 )
 

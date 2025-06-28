@@ -3,11 +3,11 @@ package userauthservice
 import (
 	"context"
 	"github.com/miladshalikar/cafe/entity"
-	param "github.com/miladshalikar/cafe/param/authservice"
+	"github.com/miladshalikar/cafe/param/user/authservice"
 	"golang.org/x/crypto/bcrypt"
 )
 
-func (s Service) Register(ctx context.Context, req param.RegisterRequest) (param.RegisterResponse, error) {
+func (s Service) Register(ctx context.Context, req userauthserviceparam.RegisterRequest) (userauthserviceparam.RegisterResponse, error) {
 
 	u := entity.User{
 		FirstName:   req.FirstName,
@@ -17,28 +17,28 @@ func (s Service) Register(ctx context.Context, req param.RegisterRequest) (param
 	}
 	hashedPassword, hErr := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	if hErr != nil {
-		return param.RegisterResponse{}, hErr
+		return userauthserviceparam.RegisterResponse{}, hErr
 	}
 	u.SetPassword(string(hashedPassword))
 
-	uu, err := s.Repo.CreateUser(ctx, u)
+	uu, err := s.repo.CreateUser(ctx, u)
 	if err != nil {
-		return param.RegisterResponse{}, err
+		return userauthserviceparam.RegisterResponse{}, err
 	}
 
-	at, aErr := s.Tokens.CreateAccessToken(uu.Id)
+	at, aErr := s.tokens.CreateAccessToken(uu.Id)
 	if aErr != nil {
-		return param.RegisterResponse{}, aErr
+		return userauthserviceparam.RegisterResponse{}, aErr
 	}
 
-	rt, rErr := s.Tokens.CreateRefreshToken(uu.Id)
+	rt, rErr := s.tokens.CreateRefreshToken(uu.Id)
 	if rErr != nil {
-		return param.RegisterResponse{}, rErr
+		return userauthserviceparam.RegisterResponse{}, rErr
 	}
 
-	return param.RegisterResponse{
+	return userauthserviceparam.RegisterResponse{
 		User: uu,
-		Tokens: param.Tokens{
+		Tokens: userauthserviceparam.Tokens{
 			AccessToken:  at,
 			RefreshToken: rt,
 		},
