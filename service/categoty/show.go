@@ -1,4 +1,4 @@
-package categotyservice
+package categoryservice
 
 import (
 	"context"
