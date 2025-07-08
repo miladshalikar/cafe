@@ -59,8 +59,8 @@ func (s Service) ParseToken(bearerToken string) (*Claims, error) {
 		return []byte(s.config.SignKey), nil
 	},
 		jwt.WithLeeway(5*time.Second),
-		jwt.WithSubject(s.config.AccessSubject),
-		jwt.WithSubject(s.config.RefreshSubject),
+		//jwt.WithSubject(s.config.AccessSubject),
+		//jwt.WithSubject(s.config.RefreshSubject),
 	)
 
 	if err != nil {
