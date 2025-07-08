@@ -2,13 +2,10 @@ package userpostgresql
 
 import (
 	"github.com/miladshalikar/cafe/entity"
+	postgresql "github.com/miladshalikar/cafe/repository"
 )
 
-type Scanner interface {
-	Scan(dest ...any) error
-}
-
-func scanUser(scanner Scanner) (entity.User, error) {
+func scanUser(scanner postgresql.Scanner) (entity.User, error) {
 
 	var user entity.User
 	var pass string
