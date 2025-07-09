@@ -1,6 +1,7 @@
 package usertokenauthservice
 
 import (
+	"errors"
 	"github.com/golang-jwt/jwt/v5"
 	"strings"
 	"time"
@@ -59,12 +60,15 @@ func (s Service) ParseToken(bearerToken string) (*Claims, error) {
 		return []byte(s.config.SignKey), nil
 	},
 		jwt.WithLeeway(5*time.Second),
-		//jwt.WithSubject(s.config.AccessSubject),
-		//jwt.WithSubject(s.config.RefreshSubject),
 	)
 
 	if err != nil {
 		return nil, err
+	}
+
+	sub, _ := token.Claims.GetSubject()
+	if sub != s.config.AccessSubject && sub != s.config.RefreshSubject {
+		return nil, errors.New("invalid subject")
 	}
 
 	if claims, ok := token.Claims.(*Claims); ok && token.Valid {
