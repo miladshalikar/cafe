@@ -7,5 +7,5 @@ import (
 
 func (h Handler) SetRoutes(e *echo.Echo) {
 	g := e.Group("/categories")
-	g.POST("", h.AddNewCategory, middleware.Auth(h.tknSvc, h.tknCfg))
+	g.POST("", h.AddNewCategory, middleware.Auth(h.tknSvc, h.tknCfg), middleware.Acl("create-category", h.aclSvc))
 }
