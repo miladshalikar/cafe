@@ -19,7 +19,7 @@ func (s Service) AddNewCategory(ctx context.Context, req categoryparam.AddNewCat
 	}
 
 	return categoryparam.AddNewCategoryResponse{
-		Id:    category.Id,
+		Id:    category.ID,
 		Title: category.Title,
 		Logo:  category.Logo,
 	}, nil

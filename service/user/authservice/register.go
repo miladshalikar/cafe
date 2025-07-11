@@ -26,12 +26,12 @@ func (s Service) Register(ctx context.Context, req userauthserviceparam.Register
 		return userauthserviceparam.RegisterResponse{}, err
 	}
 
-	at, aErr := s.tokens.CreateAccessToken(uu.Id)
+	at, aErr := s.tokens.CreateAccessToken(uu.ID)
 	if aErr != nil {
 		return userauthserviceparam.RegisterResponse{}, aErr
 	}
 
-	rt, rErr := s.tokens.CreateRefreshToken(uu.Id)
+	rt, rErr := s.tokens.CreateRefreshToken(uu.ID)
 	if rErr != nil {
 		return userauthserviceparam.RegisterResponse{}, rErr
 	}
