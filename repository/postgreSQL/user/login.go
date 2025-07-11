@@ -9,13 +9,12 @@ import (
 
 func (u *UserDB) GetUserByEmail(ctx context.Context, email string) (entity.User, error) {
 
-	query := `select id, first_name, last_name, email, phone_number, password from users where email = $1`
+	query := `select * from users where email = $1`
 
-	var user entity.User
-	var p string
-	err := u.conn.QueryRowContext(ctx, query, email).Scan(
-		&user.ID, &user.FirstName, &user.LastName, &user.Email, &user.PhoneNumber, &p)
-	user.SetPassword(p)
+	row := u.conn.QueryRowContext(ctx, query, email)
+
+	user, err := scanUser(row)
+
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return entity.User{}, errors.New("user not found")
