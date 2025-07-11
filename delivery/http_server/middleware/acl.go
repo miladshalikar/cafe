@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/miladshalikar/cafe/pkg/claims"
 	aclservice "github.com/miladshalikar/cafe/service/acl"
@@ -19,7 +18,6 @@ func Acl(requiredPermission string, aclSvc aclservice.Service) echo.MiddlewareFu
 
 			hasPermission, err := aclSvc.HasPermission(userID, requiredPermission)
 			if err != nil {
-				fmt.Println(err)
 				return ctx.JSON(http.StatusInternalServerError, echo.Map{"error": "permission check error"})
 			}
 			if !hasPermission {
