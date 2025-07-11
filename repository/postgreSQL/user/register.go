@@ -12,7 +12,7 @@ func (u *UserDB) CreateUser(ctx context.Context, user entity.User) (entity.User,
 				RETURNING id`
 
 	err := u.conn.QueryRowContext(ctx, query, user.FirstName, user.LastName,
-		user.Email, user.PhoneNumber, user.GetPassword()).Scan(&user.Id)
+		user.Email, user.PhoneNumber, user.GetPassword()).Scan(&user.ID)
 	if err != nil {
 		return entity.User{}, err
 	}

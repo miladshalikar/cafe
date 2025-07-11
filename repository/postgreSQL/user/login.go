@@ -14,7 +14,7 @@ func (u *UserDB) GetUserByEmail(ctx context.Context, email string) (entity.User,
 	var user entity.User
 	var p string
 	err := u.conn.QueryRowContext(ctx, query, email).Scan(
-		&user.Id, &user.FirstName, &user.LastName, &user.Email, &user.PhoneNumber, &p)
+		&user.ID, &user.FirstName, &user.LastName, &user.Email, &user.PhoneNumber, &p)
 	user.SetPassword(p)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {

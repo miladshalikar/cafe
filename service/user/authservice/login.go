@@ -17,12 +17,12 @@ func (s Service) LoginWithEmail(ctx context.Context, req userauthserviceparam.Lo
 		return userauthserviceparam.LoginWithEmailResponse{}, cErr
 	}
 
-	at, aErr := s.tokens.CreateAccessToken(user.Id)
+	at, aErr := s.tokens.CreateAccessToken(user.ID)
 	if aErr != nil {
 		return userauthserviceparam.LoginWithEmailResponse{}, aErr
 	}
 
-	rt, rErr := s.tokens.CreateRefreshToken(user.Id)
+	rt, rErr := s.tokens.CreateRefreshToken(user.ID)
 	if rErr != nil {
 		return userauthserviceparam.LoginWithEmailResponse{}, rErr
 	}

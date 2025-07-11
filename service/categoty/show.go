@@ -13,7 +13,7 @@ func (s Service) ShowCategory(ctx context.Context, req categoryparam.ShowSingleC
 	}
 
 	return categoryparam.ShowSingleCategoryResponse{
-		ID:    category.Id,
+		ID:    category.ID,
 		Title: category.Title,
 		Logo:  category.Logo,
 	}, nil

@@ -10,7 +10,7 @@ func (d *DB) UpdateCategory(ctx context.Context, category entity.Category) error
 
 	query := `UPDATE categories SET title = $1, logo = $2 WHERE id = $3`
 
-	result, err := d.conn.ExecContext(ctx, query, category.Title, category.Logo, category.Id)
+	result, err := d.conn.ExecContext(ctx, query, category.Title, category.Logo, category.ID)
 	if err != nil {
 		return err
 	}
@@ -21,7 +21,7 @@ func (d *DB) UpdateCategory(ctx context.Context, category entity.Category) error
 	}
 
 	if rowsAffected == 0 {
-		return fmt.Errorf("no category found with id %d", category.Id)
+		return fmt.Errorf("no category found with id %d", category.ID)
 	}
 
 	return nil

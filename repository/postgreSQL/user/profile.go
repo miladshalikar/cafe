@@ -12,7 +12,7 @@ func (u *UserDB) GetUserByID(ctx context.Context, id int) (entity.User, error) {
 
 	var user entity.User
 	err := u.conn.QueryRowContext(ctx, query, id).Scan(
-		&user.Id, &user.FirstName, &user.LastName, &user.Email, &user.PhoneNumber, &user.CreatedAt, &user.UpdatedAt)
+		&user.ID, &user.FirstName, &user.LastName, &user.Email, &user.PhoneNumber, &user.CreatedAt, &user.UpdatedAt)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return entity.User{}, errors.New("user not found")

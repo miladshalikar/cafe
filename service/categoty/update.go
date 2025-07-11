@@ -8,7 +8,7 @@ import (
 
 func (s Service) UpdateCategory(ctx context.Context, req categoryparam.UpdateCategoryRequest) (categoryparam.UpdateCategoryResponse, error) {
 	category := entity.Category{
-		Id:    req.ID,
+		ID:    req.ID,
 		Title: req.Title,
 		Logo:  req.Logo,
 	}
@@ -18,7 +18,7 @@ func (s Service) UpdateCategory(ctx context.Context, req categoryparam.UpdateCat
 	}
 
 	return categoryparam.UpdateCategoryResponse{
-		ID:    category.Id,
+		ID:    category.ID,
 		Title: category.Title,
 		Logo:  category.Logo,
 	}, nil

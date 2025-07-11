@@ -11,7 +11,7 @@ func (d *DB) AddNewCategory(ctx context.Context, category entity.Category) (enti
 				VALUES ($1, $2)
 				RETURNING id`
 
-	err := d.conn.QueryRowContext(ctx, query, category.Title, category.Logo).Scan(&category.Id)
+	err := d.conn.QueryRowContext(ctx, query, category.Title, category.Logo).Scan(&category.ID)
 	if err != nil {
 		return entity.Category{}, err
 	}

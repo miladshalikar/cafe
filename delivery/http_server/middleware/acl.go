@@ -3,9 +3,8 @@ package middleware
 import (
 	"fmt"
 	"github.com/labstack/echo/v4"
-	"github.com/miladshalikar/cafe/config"
+	"github.com/miladshalikar/cafe/pkg/claims"
 	aclservice "github.com/miladshalikar/cafe/service/acl"
-	usertokenauthservice "github.com/miladshalikar/cafe/service/user/token"
 	"net/http"
 )
 
@@ -13,12 +12,10 @@ func Acl(requiredPermission string, aclSvc aclservice.Service) echo.MiddlewareFu
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(ctx echo.Context) error {
 
-			claims := ctx.Get(config.AuthMiddlewareContextKey).(*usertokenauthservice.Claims)
-			if claims == nil {
+			userID, cErr := claims.GetIdFromClaim(ctx)
+			if cErr != nil {
 				return ctx.JSON(http.StatusUnauthorized, echo.Map{"error": "unauthorized"})
 			}
-
-			userID := claims.UserID
 
 			hasPermission, err := aclSvc.HasPermission(userID, requiredPermission)
 			if err != nil {
