@@ -3,7 +3,7 @@ package entity
 import "time"
 
 type Permission struct {
-	Id          uint       `json:"id"`
+	ID          uint       `json:"id"`
 	Title       string     `json:"title"`
 	Description string     `json:"description"`
 	CreatedAt   time.Time  `json:"created_at"`
