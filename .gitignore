@@ -3,6 +3,7 @@
 
 .idea/
 tmp/
+tmp/build-errors.log
 env-temp.sh
 .air.toml
 .gitignore
