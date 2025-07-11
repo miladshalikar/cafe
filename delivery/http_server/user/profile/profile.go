@@ -2,9 +2,8 @@ package userprofilehandler
 
 import (
 	"github.com/labstack/echo/v4"
-	"github.com/miladshalikar/cafe/config"
 	userprofileserviceparam "github.com/miladshalikar/cafe/param/user/profile"
-	usertokenauthservice "github.com/miladshalikar/cafe/service/user/token"
+	claims "github.com/miladshalikar/cafe/pkg/claims"
 	"net/http"
 )
 
@@ -12,11 +11,12 @@ func (h Handler) Profile(ctx echo.Context) error {
 
 	var req userprofileserviceparam.UserProfileRequest
 
-	claims := ctx.Get(config.AuthMiddlewareContextKey).(*usertokenauthservice.Claims)
-	if claims == nil {
+	id, cErr := claims.GetIdFromClaim(ctx)
+	if cErr != nil {
 		return ctx.JSON(401, map[string]string{"error": "unauthorized"})
 	}
-	req.Id = int(claims.UserID)
+
+	req.Id = int(id)
 
 	res, err := h.userProfSvc.GetUserByID(ctx.Request().Context(), req)
 	if err != nil {
