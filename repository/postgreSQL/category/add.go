@@ -9,11 +9,14 @@ func (d *DB) AddNewCategory(ctx context.Context, category entity.Category) (enti
 
 	query := `INSERT INTO categories (title, logo)
 				VALUES ($1, $2)
-				RETURNING id`
+				RETURNING *`
 
-	err := d.conn.QueryRowContext(ctx, query, category.Title, category.Logo).Scan(&category.ID)
+	row := d.conn.QueryRowContext(ctx, query, category.Title, category.Logo)
+
+	addedCategory, err := scanCategory(row)
+
 	if err != nil {
 		return entity.Category{}, err
 	}
-	return category, nil
+	return addedCategory, nil
 }
