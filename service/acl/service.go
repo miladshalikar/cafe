@@ -5,7 +5,10 @@ type Service struct {
 }
 
 type Repository interface {
-	HasPermission(userID uint, permissionTitle string) (int, error)
+	GetPermissionIDsByUserID(userID uint) ([]uint, error)
+	GetRoleIDsByUserID(userID uint) ([]uint, error)
+	GetPermissionIDsByRoleID(roleID uint) ([]uint, error)
+	GetPermissionIDByTitle(title string) (uint, error)
 }
 
 func New(r Repository) Service {
