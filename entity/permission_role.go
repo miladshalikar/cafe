@@ -3,7 +3,7 @@ package entity
 import "time"
 
 type PermissionRole struct {
-	Id           uint       `json:"id"`
+	ID           uint       `json:"id"`
 	RoleId       uint       `json:"role_id"`
 	PermissionId uint       `json:"permission_id"`
 	CreatedAt    time.Time  `json:"created_at"`
