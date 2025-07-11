@@ -8,11 +8,13 @@ import (
 )
 
 func (u *UserDB) GetUserByID(ctx context.Context, id int) (entity.User, error) {
-	query := `select id, first_name, last_name, email, phone_number, created_at, updated_at from users where id = $1 AND deleted_at IS NULL`
 
-	var user entity.User
-	err := u.conn.QueryRowContext(ctx, query, id).Scan(
-		&user.ID, &user.FirstName, &user.LastName, &user.Email, &user.PhoneNumber, &user.CreatedAt, &user.UpdatedAt)
+	query := `select * from users where id = $1 AND deleted_at IS NULL`
+
+	row := u.conn.QueryRowContext(ctx, query, id)
+
+	user, err := scanUser(row)
+
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return entity.User{}, errors.New("user not found")
