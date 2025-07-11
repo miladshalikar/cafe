@@ -2,3 +2,7 @@
 *.out
 
 .idea/
+tmp/
+env-temp.sh
+.air.toml
+.gitignore
