@@ -10,7 +10,6 @@ func (s Service) AddNewCategory(ctx context.Context, req categoryparam.AddNewCat
 
 	cCategory := entity.Category{
 		Title: req.Title,
-		Logo:  req.Logo,
 	}
 
 	category, cErr := s.repo.AddNewCategory(ctx, cCategory)
@@ -21,6 +20,5 @@ func (s Service) AddNewCategory(ctx context.Context, req categoryparam.AddNewCat
 	return categoryparam.AddNewCategoryResponse{
 		Id:    category.ID,
 		Title: category.Title,
-		Logo:  category.Logo,
 	}, nil
 }

@@ -10,7 +10,6 @@ func (s Service) UpdateCategory(ctx context.Context, req categoryparam.UpdateCat
 	category := entity.Category{
 		ID:    req.ID,
 		Title: req.Title,
-		Logo:  req.Logo,
 	}
 
 	if cErr := s.repo.UpdateCategory(ctx, category); cErr != nil {
@@ -18,8 +17,9 @@ func (s Service) UpdateCategory(ctx context.Context, req categoryparam.UpdateCat
 	}
 
 	return categoryparam.UpdateCategoryResponse{
-		ID:    category.ID,
-		Title: category.Title,
-		Logo:  category.Logo,
+		Category: categoryparam.CategoryInfo{
+			ID:    category.ID,
+			Title: category.Title,
+		},
 	}, nil
 }
