@@ -1,0 +1,16 @@
+package entity
+
+import "time"
+
+type Media struct {
+	ID        uint       `json:"id"`
+	FileName  string     `json:"file_name"`
+	Size      uint       `json:"size"`
+	Path      string     `json:"path"`
+	MimeType  string     `json:"mime_type"`
+	IsPrivate bool       `json:"is_private"`
+	Bucket    string     `json:"bucket"`
+	CreatedAt time.Time  `json:"created_at"`
+	UpdatedAt time.Time  `json:"updated_at"`
+	DeletedAt *time.Time `json:"deleted_at"`
+}
