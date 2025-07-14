@@ -5,7 +5,5 @@ type ShowSingleCategoryRequest struct {
 }
 
 type ShowSingleCategoryResponse struct {
-	ID      uint   `json:"id"`
-	Title   string `json:"title"`
-	MediaID uint   `json:"media_id"`
+	CategoryInfo CategoryInfo `json:"category_info"`
 }
