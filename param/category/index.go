@@ -3,10 +3,10 @@ package categoryparam
 import "github.com/miladshalikar/cafe/param/common"
 
 type GetCategoryRequest struct {
-	Pagination common.PaginationRequest
+	Pagination commonparam.PaginationRequest
 }
 
 type GetCategoryResponse struct {
-	Pagination common.PaginationResponse
+	Pagination commonparam.PaginationResponse
 	Categories []CategoryInfo `json:"categories"`
 }
