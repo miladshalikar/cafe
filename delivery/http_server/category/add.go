@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func (h Handler) AddNewCategory(ctx echo.Context) error {
+func (h Handler) AddNewCategoryHandler(ctx echo.Context) error {
 
 	var req categoryparam.AddNewCategoryRequest
 
