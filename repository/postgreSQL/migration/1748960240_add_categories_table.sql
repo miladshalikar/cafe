@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS categories
 (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
-    logo VARCHAR(255),
+    media_id INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     deleted_at TIMESTAMP

@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS items
     description TEXT,
     price DOUBLE PRECISION NOT NULL,
     category_id INT,
-    logo VARCHAR(255),
+    media_id INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     deleted_at TIMESTAMP,
