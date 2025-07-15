@@ -1,4 +1,4 @@
-package common
+package commonparam
 
 const (
 	DefaultPageSize   = 25

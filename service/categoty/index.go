@@ -30,7 +30,7 @@ func (s Service) GetCategories(ctx context.Context, req categoryparam.GetCategor
 	}
 
 	return categoryparam.GetCategoryResponse{
-		Pagination: common.PaginationResponse{
+		Pagination: commonparam.PaginationResponse{
 			PageSize:   req.Pagination.GetPageSize(),
 			PageNumber: req.Pagination.GetPageNumber(),
 			Total:      total,

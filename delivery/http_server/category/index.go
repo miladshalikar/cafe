@@ -3,6 +3,7 @@ package categoryhandler
 import (
 	"github.com/labstack/echo/v4"
 	categoryparam "github.com/miladshalikar/cafe/param/category"
+	commonparam "github.com/miladshalikar/cafe/param/common"
 	"net/http"
 	"strconv"
 )
