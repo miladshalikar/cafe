@@ -7,11 +7,11 @@ import (
 
 func (d *DB) AddNewCategory(ctx context.Context, category entity.Category) (entity.Category, error) {
 
-	query := `INSERT INTO categories (title, logo)
-				VALUES ($1, $2)
+	query := `INSERT INTO categories (title)
+				VALUES ($1)
 				RETURNING *`
 
-	row := d.conn.QueryRowContext(ctx, query, category.Title, category.Logo)
+	row := d.conn.QueryRowContext(ctx, query, category.Title)
 
 	addedCategory, err := scanCategory(row)
 

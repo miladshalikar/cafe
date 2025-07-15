@@ -8,9 +8,9 @@ import (
 
 func (d *DB) UpdateCategory(ctx context.Context, category entity.Category) error {
 
-	query := `UPDATE categories SET title = $1, logo = $2 WHERE id = $3`
+	query := `UPDATE categories SET title = $1 WHERE id = $3`
 
-	result, err := d.conn.ExecContext(ctx, query, category.Title, category.Logo, category.ID)
+	result, err := d.conn.ExecContext(ctx, query, category.Title, category.ID)
 	if err != nil {
 		return err
 	}
