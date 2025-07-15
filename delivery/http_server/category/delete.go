@@ -16,7 +16,9 @@ func (h Handler) DeleteCategoryHandler(ctx echo.Context) error {
 
 	req := categoryparam.DeleteCategoryRequest{ID: uint(id)}
 
-	//validation
+	if fieldErrors, err := h.categoryVld.ValidateDeleteCategory(ctx.Request().Context(), req); err != nil {
+		return ctx.JSON(http.StatusInternalServerError, fieldErrors)
+	}
 
 	res, err := h.categorySvc.DeleteCategory(ctx.Request().Context(), req)
 	if err != nil {
