@@ -14,8 +14,8 @@ type Repository interface {
 	DeleteCategory(ctx context.Context, id uint) error
 	GetCategoryById(ctx context.Context, id uint) (entity.Category, error)
 	UpdateCategory(ctx context.Context, category entity.Category) error
-	GetTotalCountArea(ctx context.Context) (uint, error)
-	GetAreasWithPagination(ctx context.Context, pageSize, offset uint) ([]entity.Category, error)
+	GetTotalCountCategory(ctx context.Context) (uint, error)
+	GetCategoriesWithPagination(ctx context.Context, pageSize, offset uint) ([]entity.Category, error)
 }
 
 func New(r Repository) Service {
