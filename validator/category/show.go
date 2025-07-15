@@ -7,9 +7,10 @@ import (
 	categoryparam "github.com/miladshalikar/cafe/param/category"
 )
 
-func (v Validator) ValidateAddCategory(ctx context.Context, req categoryparam.AddNewCategoryRequest) (map[string]string, error) {
+func (v Validator) ValidateShowSingleCategory(ctx context.Context, req categoryparam.ShowSingleCategoryRequest) (map[string]string, error) {
+
 	if err := validation.ValidateStructWithContext(ctx, &req,
-		validation.Field(&req.Title, validation.Required, validation.Length(3, 190)),
+		validation.Field(&req.ID, validation.Required, validation.WithContext(v.checkCategoryIsExist)),
 	); err != nil {
 		fieldErrors := make(map[string]string)
 		vErr := validation.Errors{}
