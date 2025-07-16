@@ -20,11 +20,14 @@ func (h Handler) GetCategoriesHandler(ctx echo.Context) error {
 		pageSize = commonparam.DefaultPageSize
 	}
 
+	search := ctx.QueryParam("name")
+
 	req := categoryparam.GetCategoryRequest{
 		Pagination: commonparam.PaginationRequest{
 			PageSize:   uint(pageSize),
 			PageNumber: uint(pageNumber),
 		},
+		Search: search,
 	}
 
 	res, err := h.categorySvc.GetCategories(ctx.Request().Context(), req)

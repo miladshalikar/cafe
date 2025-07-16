@@ -6,24 +6,41 @@ import (
 	"github.com/miladshalikar/cafe/entity"
 )
 
-func (d *DB) GetTotalCountCategory(ctx context.Context) (uint, error) {
+func (d *DB) GetTotalCountCategory(ctx context.Context, search string) (uint, error) {
 
-	query := `SELECT * FROM categories`
+	query := `SELECT COUNT(*) FROM categories`
 
 	var count uint
+	var args []interface{}
 
-	if err := d.conn.QueryRowContext(ctx, query).Scan(&count); err != nil {
+	if search != "" {
+		query += " WHERE title ILIKE $1"
+		args = append(args, "%"+search+"%")
+	}
+
+	if err := d.conn.QueryRowContext(ctx, query, args...).Scan(&count); err != nil {
 		return 0, fmt.Errorf("something went wrong: %w", err)
 	}
 	return count, nil
 
 }
 
-func (d *DB) GetCategoriesWithPagination(ctx context.Context, pageSize, offset uint) ([]entity.Category, error) {
+func (d *DB) GetCategoriesWithPagination(ctx context.Context, pageSize, offset uint, search string) ([]entity.Category, error) {
 
-	query := `SELECT * FROM categories LIMIT $1 OFFSET $2`
+	query := `SELECT * FROM categories`
+	var args []interface{}
+	argIndex := 1
 
-	rows, err := d.conn.QueryContext(ctx, query, pageSize, offset)
+	if search != "" {
+		query += fmt.Sprintf(" WHERE title ILIKE $%d", argIndex)
+		args = append(args, "%"+search+"%")
+		argIndex++
+	}
+
+	query += fmt.Sprintf(" LIMIT $%d OFFSET $%d", argIndex, argIndex+1)
+	args = append(args, pageSize, offset)
+
+	rows, err := d.conn.QueryContext(ctx, query, args...)
 	if err != nil {
 		return nil, fmt.Errorf("query execution failed: %w", err)
 	}
