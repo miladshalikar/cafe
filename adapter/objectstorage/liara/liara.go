@@ -1,10 +1,10 @@
 package liaraobjectstorage
 
 import (
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/s3"
+	"context"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"log"
 )
 
@@ -17,26 +17,28 @@ type Config struct {
 
 type Disk struct {
 	config Config
-	client *s3.S3
+	client *s3.Client
 }
 
 func New(credential Config) *Disk {
 
-	sess, err := session.NewSession(&aws.Config{
-		Endpoint:    aws.String(credential.Endpoint),
-		Region:      aws.String("us-east-1"), // Region is required but can be arbitrary for S3-compatible storage
-		Credentials: credentials.NewStaticCredentials(credential.AwsAccessKey, credential.AwsSecretAccessKey, ""),
-	})
-	if err != nil {
-		log.Fatalf("Failed to create AWS session: %v", err)
+	cfg, lErr := config.LoadDefaultConfig(context.Background(), config.WithRegion("us-west-2"))
+	if lErr != nil {
+		log.Println("error in load config in liara object storage :", lErr)
 	}
+	cfg.Credentials = aws.CredentialsProviderFunc(func(ctx context.Context) (aws.Credentials, error) {
+		return aws.Credentials{
+			AccessKeyID:     credential.AwsAccessKey,
+			SecretAccessKey: credential.AwsSecretAccessKey,
+		}, nil
+	})
 
-	// Create S3 client
-	s3Client := s3.New(sess)
+	cfg.BaseEndpoint = aws.String(credential.Endpoint)
+
+	client := s3.NewFromConfig(cfg)
 
 	return &Disk{
 		config: credential,
-		client: s3Client,
+		client: client,
 	}
-
 }
