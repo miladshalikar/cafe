@@ -4,6 +4,7 @@ import "github.com/miladshalikar/cafe/param/common"
 
 type GetCategoryRequest struct {
 	Pagination commonparam.PaginationRequest
+	Search     string `json:"search"`
 }
 
 type GetCategoryResponse struct {
