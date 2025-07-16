@@ -8,6 +8,10 @@ services:
       - MA_POSTGRES__PASSWORD=123qwe123
       - MA_POSTGRES__PORT=5432
       - MA_TOKEN__SIGN_KEY=miladooo
+      - MA_OBJECT_STORAGE__ENDPOINT_URL=https://storage.c2.liara.space
+      - MA_OBJECT_STORAGE__ACCESS_KEY=bns9u8bp0q0tlbtm
+      - MA_OBJECT_STORAGE__SECRET_KEY=9519cb86-43d8-4529-9419-797b8d3273dc
+      - MA_OBJECT_STORAGE__BUCKET_NAME=cafe-files
     build:
       context: .
       dockerfile: Dockerfile

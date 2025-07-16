@@ -30,6 +30,8 @@ func main() {
 	pd := postgreSQL.New(cfg.Postgres)
 	db := pd.Conn()
 
+	//liaraobjectstorage.New(cfg.ObjectStorage)
+
 	repo := userpostgresql.New(db)
 	tok := usertokenauthservice.New(cfg.Token)
 	val := userauthvalidator.New(repo)
