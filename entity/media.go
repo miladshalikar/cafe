@@ -2,6 +2,11 @@ package entity
 
 import "time"
 
+const (
+	MaxFileUploadSize          = 300 * 1024 * 1024
+	FileLinkExpirationDuration = 60 * int64(time.Second) * 60 * 7
+)
+
 type Media struct {
 	ID        uint       `json:"id"`
 	FileName  string     `json:"file_name"`
