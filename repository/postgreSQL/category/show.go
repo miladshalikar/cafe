@@ -8,7 +8,7 @@ import (
 	"github.com/miladshalikar/cafe/entity"
 )
 
-func (d *DB) GetCategoryById(ctx context.Context, id uint) (entity.Category, error) {
+func (d *DB) GetCategoryByID(ctx context.Context, id uint) (entity.Category, error) {
 
 	query := `SELECT * FROM categories WHERE id = $1`
 
