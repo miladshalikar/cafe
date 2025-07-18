@@ -25,7 +25,7 @@ func (d *DB) GetMediaByID(ctx context.Context, id uint) (entity.Media, error) {
 	return media, nil
 }
 
-func (d *DB) CheckMediaIsExist(ctx context.Context, id uint) (bool, error) {
+func (d *DB) CheckMediaIsExistByID(ctx context.Context, id uint) (bool, error) {
 
 	query := `SELECT * FROM media WHERE id = $1`
 
