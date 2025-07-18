@@ -4,8 +4,8 @@ import "mime/multipart"
 
 type UploadMediaRequest struct {
 	*multipart.FileHeader `json:"file"`
-	IsPrivate             bool
-	Bucket                string
+	IsPrivate             bool   `json:"is_private"`
+	Bucket                string `json:"bucket"`
 }
 
 type UploadMediaResponse struct {
