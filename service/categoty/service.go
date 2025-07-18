@@ -12,7 +12,7 @@ type Service struct {
 type Repository interface {
 	AddNewCategory(ctx context.Context, category entity.Category) (entity.Category, error)
 	DeleteCategory(ctx context.Context, id uint) error
-	GetCategoryById(ctx context.Context, id uint) (entity.Category, error)
+	GetCategoryByID(ctx context.Context, id uint) (entity.Category, error)
 	UpdateCategory(ctx context.Context, category entity.Category) error
 	GetTotalCountCategory(ctx context.Context, search string) (uint, error)
 	GetCategoriesWithPagination(ctx context.Context, pageSize, offset uint, search string) ([]entity.Category, error)

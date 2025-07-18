@@ -7,7 +7,7 @@ import (
 
 func (s Service) ShowCategory(ctx context.Context, req categoryparam.ShowSingleCategoryRequest) (categoryparam.ShowSingleCategoryResponse, error) {
 
-	category, cErr := s.repo.GetCategoryById(ctx, req.ID)
+	category, cErr := s.repo.GetCategoryByID(ctx, req.ID)
 	if cErr != nil {
 		return categoryparam.ShowSingleCategoryResponse{}, cErr
 	}
