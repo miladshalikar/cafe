@@ -16,7 +16,7 @@ func (d *DB) AddMedia(ctx context.Context, media entity.Media) (entity.Media, er
 
 	addedMedia, err := scanMedia(row)
 	if err != nil {
-		return entity.Media{}, fmt.Errorf("failed to scan category: %w", err)
+		return entity.Media{}, fmt.Errorf("failed to scan media: %w", err)
 	}
 
 	return addedMedia, nil
