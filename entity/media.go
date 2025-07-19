@@ -5,7 +5,7 @@ import "time"
 var ValidExt = []string{"mp4", "png", "jpg", "jpeg"}
 
 const (
-	MaxFileUploadSize          = 300 * 1024 * 1024
+	MaxFileUploadSize          = 5 * 1024 * 1024
 	FileLinkExpirationDuration = 60 * int64(time.Second) * 60 * 7
 )
 
