@@ -43,22 +43,22 @@ func main() {
 	ser := userauthservice.New(repo, tknSvc)
 	hand := userauthhandler.New(ser, val)
 
-	aaa := userprofileservice.New(repo)
-	handy := userprofilehandler.New(aaa, tknSvc, cfg.Token)
-
-	rrr := categorypostgresql.New(db)
-	nn := categoryvalidator.New(rrr)
-	sss := categoryservice.New(rrr)
-
 	aclr := aclpostgresql.New(db)
 	acl := aclservice.New(aclr)
 
-	hhh := categoryhandler.New(sss, nn, tknSvc, cfg.Token, acl)
+	aaa := userprofileservice.New(repo)
+	handy := userprofilehandler.New(aaa, tknSvc, cfg.Token)
 
 	mediaDB := mediapostgresql.New(db)
 	mediaVld := mediavalidator.New(mediaDB)
 	mediaSvc := mediaservice.New(objectStorage, mediaDB)
 	mediaHandler := mediahandler.New(mediaSvc, mediaVld, tknSvc, cfg.Token, acl)
+
+	rrr := categorypostgresql.New(db)
+	nn := categoryvalidator.New(rrr)
+	sss := categoryservice.New(rrr, mediaSvc)
+
+	hhh := categoryhandler.New(sss, nn, tknSvc, cfg.Token, acl)
 
 	echoServer := httpserver.New(cfg, hand, handy, hhh, mediaHandler)
 	echoServer.Serve()
