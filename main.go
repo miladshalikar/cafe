@@ -9,6 +9,8 @@ import (
 	mediahandler "github.com/miladshalikar/cafe/delivery/http_server/media"
 	userauthhandler "github.com/miladshalikar/cafe/delivery/http_server/user/auth"
 	userprofilehandler "github.com/miladshalikar/cafe/delivery/http_server/user/profile"
+	"github.com/miladshalikar/cafe/repository/cache/redis"
+	mediaredis "github.com/miladshalikar/cafe/repository/cache/redis/media"
 	"github.com/miladshalikar/cafe/repository/migrator"
 	"github.com/miladshalikar/cafe/repository/postgreSQL"
 	aclpostgresql "github.com/miladshalikar/cafe/repository/postgreSQL/acl"
@@ -35,6 +37,9 @@ func main() {
 	pd := postgreSQL.New(cfg.Postgres)
 	db := pd.Conn()
 
+	cach := redis.New(cfg.Redis)
+	cache := cach.Conn()
+
 	objectStorage := liaraobjectstorage.New(cfg.ObjectStorage)
 
 	repo := userpostgresql.New(db)
@@ -55,8 +60,9 @@ func main() {
 	mediaHandler := mediahandler.New(mediaSvc, mediaVld, tknSvc, cfg.Token, acl)
 
 	rrr := categorypostgresql.New(db)
+	ccache := mediaredis.New(cache)
 	nn := categoryvalidator.New(rrr)
-	sss := categoryservice.New(rrr, mediaSvc)
+	sss := categoryservice.New(rrr, mediaSvc, ccache)
 
 	hhh := categoryhandler.New(sss, nn, tknSvc, cfg.Token, acl)
 

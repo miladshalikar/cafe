@@ -9,6 +9,7 @@ import (
 type Service struct {
 	repo   Repository
 	Client Client
+	cache  Cache
 }
 
 type Repository interface {
@@ -26,6 +27,12 @@ type Client interface {
 	DeleteMedia(ctx context.Context, req mediaparam.DeleteMediaRequest) (mediaparam.DeleteMediaResponse, error)
 }
 
-func New(r Repository, c Client) Service {
-	return Service{repo: r, Client: c}
+type Cache interface {
+	SetMediaURLByMediaID(ctx context.Context, mediaID uint, url string) error
+	GetMediaURLByMediaID(ctx context.Context, mediaID uint) (string, error)
+	MGetMediaURLs(ctx context.Context, mediaIDs []uint) (map[uint]string, error)
+}
+
+func New(r Repository, c Client, ca Cache) Service {
+	return Service{repo: r, Client: c, cache: ca}
 }
