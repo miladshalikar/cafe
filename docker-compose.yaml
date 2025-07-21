@@ -12,6 +12,9 @@ services:
       - MA_OBJECT_STORAGE__ACCESS_KEY=bns9u8bp0q0tlbtm
       - MA_OBJECT_STORAGE__SECRET_KEY=9519cb86-43d8-4529-9419-797b8d3273dc
       - MA_OBJECT_STORAGE__BUCKET_NAME=cafe-files
+      - MA_REDIS__HOST=redis_cafe_container
+      - MA_REDIS__PORT=6379
+      - MA_REDIS__DB=0
     build:
       context: .
       dockerfile: Dockerfile
@@ -21,6 +24,9 @@ services:
       - .:/app
     networks:
       - cafe
+    depends_on:
+      - redis
+      - postgres
 
   postgres:
     image: postgres:17.2
@@ -54,10 +60,23 @@ services:
     depends_on:
       - postgres
 
+  redis:
+    image: redis:7
+    container_name: redis_cafe_container
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis:/data
+    networks:
+      - cafe
+    restart: unless-stopped
+
+
 volumes:
   app:
   postgres:
   pgadmin:
+  redis:
 
 networks:
   cafe:
