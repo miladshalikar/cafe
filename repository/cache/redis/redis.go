@@ -42,19 +42,3 @@ func New(cfg Config) *Redis {
 
 	return &Redis{cfg: cfg, client: client}
 }
-
-//func (r *Redis) Set(ctx context.Context, key string, value string, ttlSeconds int) error {
-//	return r.client.Set(ctx, key, value, time.Duration(ttlSeconds)*time.Second).Err()
-//}
-//
-//func (r *Redis) Get(ctx context.Context, key string) (string, error) {
-//	val, err := r.client.Get(ctx, key).Result()
-//	if err == redis.Nil {
-//		return "", nil
-//	}
-//	return val, err
-//}
-//
-//func (r *Redis) Del(ctx context.Context, key string) error {
-//	return r.client.Del(ctx, key).Err()
-//}
