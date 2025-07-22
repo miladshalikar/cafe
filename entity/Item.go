@@ -7,7 +7,7 @@ type Item struct {
 	Title       string     `json:"title"`
 	Description string     `json:"description"`
 	Price       float64    `json:"price"`
-	CategoryId  uint       `json:"category_id"`
+	CategoryID  uint       `json:"category_id"`
 	MediaID     uint       `json:"media_id"`
 	CreatedAt   time.Time  `json:"created_at"`
 	UpdatedAt   time.Time  `json:"updated_at"`
