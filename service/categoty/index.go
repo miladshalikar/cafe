@@ -38,7 +38,7 @@ func (s Service) GetCategories(ctx context.Context, req categoryparam.GetCategor
 
 	for _, id := range missingIDs {
 
-		mediaRes, mErr := s.Client.GetURLMedia(ctx, mediaparam.GetURLRequest{ID: id})
+		mediaRes, mErr := s.client.GetURLMedia(ctx, mediaparam.GetURLRequest{ID: id})
 		if mErr != nil {
 			return categoryparam.GetCategoryResponse{}, mErr
 		}

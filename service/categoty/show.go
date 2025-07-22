@@ -13,7 +13,7 @@ func (s Service) ShowCategory(ctx context.Context, req categoryparam.ShowSingleC
 		return categoryparam.ShowSingleCategoryResponse{}, cErr
 	}
 
-	media, mErr := s.Client.GetURLMedia(ctx, mediaparam.GetURLRequest{ID: category.MediaID})
+	media, mErr := s.client.GetURLMedia(ctx, mediaparam.GetURLRequest{ID: category.MediaID})
 	if mErr != nil {
 		return categoryparam.ShowSingleCategoryResponse{}, mErr
 	}

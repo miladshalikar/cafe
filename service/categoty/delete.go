@@ -17,7 +17,7 @@ func (s Service) DeleteCategory(ctx context.Context, req categoryparam.DeleteCat
 		return categoryparam.DeleteCategoryResponse{}, cErr
 	}
 
-	if _, dErr := s.Client.DeleteMedia(ctx, mediaparam.DeleteMediaRequest{ID: category.MediaID}); dErr != nil {
+	if _, dErr := s.client.DeleteMedia(ctx, mediaparam.DeleteMediaRequest{ID: category.MediaID}); dErr != nil {
 
 		_ = s.repo.UndoDeleteCategory(ctx, req.ID)
 
