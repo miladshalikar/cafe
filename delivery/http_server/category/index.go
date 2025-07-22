@@ -22,7 +22,7 @@ func (h Handler) GetCategoriesHandler(ctx echo.Context) error {
 
 	search := ctx.QueryParam("name")
 
-	req := categoryparam.GetCategoryRequest{
+	req := categoryparam.GetCategoriesRequest{
 		Pagination: commonparam.PaginationRequest{
 			PageSize:   uint(pageSize),
 			PageNumber: uint(pageNumber),

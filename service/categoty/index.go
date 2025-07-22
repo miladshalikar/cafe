@@ -7,16 +7,16 @@ import (
 	mediaparam "github.com/miladshalikar/cafe/param/media"
 )
 
-func (s Service) GetCategories(ctx context.Context, req categoryparam.GetCategoryRequest) (categoryparam.GetCategoryResponse, error) {
+func (s Service) GetCategories(ctx context.Context, req categoryparam.GetCategoriesRequest) (categoryparam.GetCategoriesResponse, error) {
 
 	total, tErr := s.repo.GetTotalCountCategory(ctx, req.Search.Search)
 	if tErr != nil {
-		return categoryparam.GetCategoryResponse{}, tErr
+		return categoryparam.GetCategoriesResponse{}, tErr
 	}
 
 	categories, cErr := s.repo.GetCategoriesWithPagination(ctx, req.Pagination.GetPageSize(), req.Pagination.GetOffset(), req.Search.Search)
 	if cErr != nil {
-		return categoryparam.GetCategoryResponse{}, cErr
+		return categoryparam.GetCategoriesResponse{}, cErr
 	}
 
 	var mediaIDs []uint
@@ -26,7 +26,7 @@ func (s Service) GetCategories(ctx context.Context, req categoryparam.GetCategor
 
 	cachedURLs, err := s.cache.MGetMediaURLs(ctx, mediaIDs)
 	if err != nil {
-		return categoryparam.GetCategoryResponse{}, err
+		return categoryparam.GetCategoriesResponse{}, err
 	}
 
 	missingIDs := make([]uint, 0)
@@ -40,7 +40,7 @@ func (s Service) GetCategories(ctx context.Context, req categoryparam.GetCategor
 
 		mediaRes, mErr := s.client.GetURLMedia(ctx, mediaparam.GetURLRequest{ID: id})
 		if mErr != nil {
-			return categoryparam.GetCategoryResponse{}, mErr
+			return categoryparam.GetCategoriesResponse{}, mErr
 		}
 
 		_ = s.cache.SetMediaURLByMediaID(ctx, id, mediaRes.URL)
@@ -59,7 +59,7 @@ func (s Service) GetCategories(ctx context.Context, req categoryparam.GetCategor
 		})
 	}
 
-	return categoryparam.GetCategoryResponse{
+	return categoryparam.GetCategoriesResponse{
 		Pagination: commonparam.PaginationResponse{
 			PageSize:   req.Pagination.GetPageSize(),
 			PageNumber: req.Pagination.GetPageNumber(),
