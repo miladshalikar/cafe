@@ -8,7 +8,7 @@ import (
 
 type Service struct {
 	repo   Repository
-	Client Client
+	client Client
 	cache  Cache
 }
 
@@ -35,5 +35,5 @@ type Cache interface {
 }
 
 func New(r Repository, c Client, ca Cache) Service {
-	return Service{repo: r, Client: c, cache: ca}
+	return Service{repo: r, client: c, cache: ca}
 }
