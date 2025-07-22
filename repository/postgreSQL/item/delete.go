@@ -26,7 +26,7 @@ func (d *DB) DeleteItem(ctx context.Context, id uint) error {
 	return nil
 }
 
-func (d *DB) undoDeleteItem(ctx context.Context, id uint) error {
+func (d *DB) UndoDeleteItem(ctx context.Context, id uint) error {
 	query := `UPDATE items SET deleted_at = NULL WHERE id = $1`
 	_, err := d.conn.ExecContext(ctx, query, id)
 	return err
