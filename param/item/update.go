@@ -1,14 +1,14 @@
 package itemparam
 
-type UpdateCategoryRequest struct {
-	Id          uint    `json:"id"`
+type UpdateItemRequest struct {
+	ID          uint    `json:"id"`
 	Title       string  `json:"title"`
 	Description string  `json:"description"`
 	Price       float64 `json:"price"`
-	CategoryId  uint    `json:"category_id"`
+	CategoryID  uint    `json:"category_id"`
 	MediaID     uint    `json:"media_id"`
 }
 
-type UpdateCategoryResponse struct {
+type UpdateItemResponse struct {
 	ItemInfo ItemInfo `json:"item_info"`
 }
