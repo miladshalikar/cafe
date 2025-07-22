@@ -27,7 +27,7 @@ func (h Handler) GetCategoriesHandler(ctx echo.Context) error {
 			PageSize:   uint(pageSize),
 			PageNumber: uint(pageNumber),
 		},
-		Search: search,
+		Search: commonparam.SearchRequest{Search: search},
 	}
 
 	res, err := h.categorySvc.GetCategories(ctx.Request().Context(), req)
