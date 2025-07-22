@@ -10,7 +10,7 @@ import (
 
 func (d *DB) GetCategoryByID(ctx context.Context, id uint) (entity.Category, error) {
 
-	query := `SELECT * FROM categories WHERE id = $1`
+	query := `SELECT * FROM categories WHERE id = $1 AND deleted_at IS NULL`
 
 	row := d.conn.QueryRowContext(ctx, query, id)
 
@@ -28,7 +28,7 @@ func (d *DB) GetCategoryByID(ctx context.Context, id uint) (entity.Category, err
 
 func (d *DB) CheckCategoryIsExistByID(ctx context.Context, id uint) (bool, error) {
 
-	query := `SELECT * FROM categories WHERE id = $1`
+	query := `SELECT * FROM categories WHERE id = $1 AND deleted_at IS NULL`
 
 	row := d.conn.QueryRowContext(ctx, query, id)
 

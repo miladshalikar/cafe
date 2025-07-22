@@ -8,13 +8,13 @@ import (
 
 func (d *DB) GetTotalCountCategory(ctx context.Context, search string) (uint, error) {
 
-	query := `SELECT COUNT(*) FROM categories`
+	query := `SELECT COUNT(*) FROM categories WHERE deleted_at IS NULL`
 
 	var count uint
 	var args []interface{}
 
 	if search != "" {
-		query += " WHERE title ILIKE $1"
+		query += " AND title ILIKE $1"
 		args = append(args, "%"+search+"%")
 	}
 
@@ -27,12 +27,12 @@ func (d *DB) GetTotalCountCategory(ctx context.Context, search string) (uint, er
 
 func (d *DB) GetCategoriesWithPagination(ctx context.Context, pageSize, offset uint, search string) ([]entity.Category, error) {
 
-	query := `SELECT * FROM categories`
+	query := `SELECT * FROM categories WHERE deleted_at IS NULL`
 	var args []interface{}
 	argIndex := 1
 
 	if search != "" {
-		query += fmt.Sprintf(" WHERE title ILIKE $%d", argIndex)
+		query += fmt.Sprintf(" AND title ILIKE $%d", argIndex)
 		args = append(args, "%"+search+"%")
 		argIndex++
 	}

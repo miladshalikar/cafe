@@ -7,7 +7,9 @@ import (
 
 func (d *DB) DeleteMedia(ctx context.Context, id uint) error {
 
-	query := `DELETE FROM media WHERE id=$1`
+	query := `UPDATE media
+		SET deleted_at = NOW()
+		WHERE id = $1 AND deleted_at IS NULL`
 
 	result, err := d.conn.ExecContext(ctx, query, id)
 	if err != nil {

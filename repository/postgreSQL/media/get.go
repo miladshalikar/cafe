@@ -10,7 +10,7 @@ import (
 
 func (d *DB) GetMediaByID(ctx context.Context, id uint) (entity.Media, error) {
 
-	query := `SELECT * FROM media WHERE id = $1`
+	query := `SELECT * FROM media WHERE id = $1 AND deleted_at IS NULL`
 
 	row := d.conn.QueryRowContext(ctx, query, id)
 
@@ -27,7 +27,7 @@ func (d *DB) GetMediaByID(ctx context.Context, id uint) (entity.Media, error) {
 
 func (d *DB) CheckMediaIsExistByID(ctx context.Context, id uint) (bool, error) {
 
-	query := `SELECT * FROM media WHERE id = $1`
+	query := `SELECT * FROM media WHERE id = $1 AND deleted_at IS NULL`
 
 	row := d.conn.QueryRowContext(ctx, query, id)
 
