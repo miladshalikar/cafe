@@ -1,14 +1,14 @@
-package categoryhandler
+package itemhandler
 
 import (
 	"github.com/labstack/echo/v4"
-	categoryparam "github.com/miladshalikar/cafe/param/category"
 	commonparam "github.com/miladshalikar/cafe/param/common"
+	itemparam "github.com/miladshalikar/cafe/param/item"
 	"net/http"
 	"strconv"
 )
 
-func (h Handler) GetCategoriesHandler(ctx echo.Context) error {
+func (h Handler) GetItemsHandler(ctx echo.Context) error {
 
 	pageNumber, nErr := strconv.ParseUint(ctx.QueryParam("page_number"), 10, 64)
 	if nErr != nil {
@@ -22,7 +22,7 @@ func (h Handler) GetCategoriesHandler(ctx echo.Context) error {
 
 	search := ctx.QueryParam("name")
 
-	req := categoryparam.GetCategoriesRequest{
+	req := itemparam.GetItemsRequest{
 		Pagination: commonparam.PaginationRequest{
 			PageSize:   uint(pageSize),
 			PageNumber: uint(pageNumber),
@@ -30,7 +30,7 @@ func (h Handler) GetCategoriesHandler(ctx echo.Context) error {
 		Search: commonparam.SearchRequest{Search: search},
 	}
 
-	res, err := h.categorySvc.GetCategories(ctx.Request().Context(), req)
+	res, err := h.itemSvc.GetItems(ctx.Request().Context(), req)
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, err)
 	}
