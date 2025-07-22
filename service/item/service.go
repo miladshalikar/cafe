@@ -1,4 +1,4 @@
-package categoryservice
+package itemservice
 
 import (
 	"context"
@@ -13,13 +13,13 @@ type Service struct {
 }
 
 type Repository interface {
-	AddNewCategory(ctx context.Context, category entity.Category) (entity.Category, error)
-	DeleteCategory(ctx context.Context, id uint) error
-	UndoDeleteCategory(ctx context.Context, id uint) error
-	GetCategoryByID(ctx context.Context, id uint) (entity.Category, error)
-	UpdateCategory(ctx context.Context, category entity.Category) error
-	GetTotalCountCategory(ctx context.Context, search string) (uint, error)
-	GetCategoriesWithPagination(ctx context.Context, pageSize, offset uint, search string) ([]entity.Category, error)
+	AddNewItem(ctx context.Context, item entity.Item) (entity.Item, error)
+	DeleteItem(ctx context.Context, id uint) error
+	UndoDeleteItem(ctx context.Context, id uint) error
+	GetItemByID(ctx context.Context, id uint) (entity.Item, error)
+	UpdateItem(ctx context.Context, item entity.Item) error
+	GetTotalCountItem(ctx context.Context, search string) (uint, error)
+	GetItemsWithPagination(ctx context.Context, pageSize, offset uint, search string) ([]entity.Item, error)
 }
 
 type Client interface {
