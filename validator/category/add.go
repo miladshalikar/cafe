@@ -10,7 +10,7 @@ import (
 func (v Validator) ValidateAddCategory(ctx context.Context, req categoryparam.AddNewCategoryRequest) (map[string]string, error) {
 	if err := validation.ValidateStructWithContext(ctx, &req,
 		validation.Field(&req.Title, validation.Required, validation.Length(3, 190)),
-		validation.Field(&req.MediaID, validation.Required),
+		validation.Field(&req.MediaID, validation.Min(0)),
 	); err != nil {
 		fieldErrors := make(map[string]string)
 		vErr := validation.Errors{}
