@@ -7,16 +7,16 @@ import (
 	mediaparam "github.com/miladshalikar/cafe/param/media"
 )
 
-func (s Service) GetItems(ctx context.Context, req itemparam.GetItemRequest) (itemparam.GetItemResponse, error) {
+func (s Service) GetItems(ctx context.Context, req itemparam.GetItemsRequest) (itemparam.GetItemsResponse, error) {
 
 	total, tErr := s.repo.GetTotalCountItem(ctx, req.Search.Search)
 	if tErr != nil {
-		return itemparam.GetItemResponse{}, tErr
+		return itemparam.GetItemsResponse{}, tErr
 	}
 
 	items, cErr := s.repo.GetItemsWithPagination(ctx, req.Pagination.GetPageSize(), req.Pagination.GetOffset(), req.Search.Search)
 	if cErr != nil {
-		return itemparam.GetItemResponse{}, cErr
+		return itemparam.GetItemsResponse{}, cErr
 	}
 
 	var mediaIDs []uint
@@ -26,7 +26,7 @@ func (s Service) GetItems(ctx context.Context, req itemparam.GetItemRequest) (it
 
 	cachedURLs, err := s.cache.MGetMediaURLs(ctx, mediaIDs)
 	if err != nil {
-		return itemparam.GetItemResponse{}, err
+		return itemparam.GetItemsResponse{}, err
 	}
 
 	missingIDs := make([]uint, 0)
@@ -40,7 +40,7 @@ func (s Service) GetItems(ctx context.Context, req itemparam.GetItemRequest) (it
 
 		mediaRes, mErr := s.client.GetURLMedia(ctx, mediaparam.GetURLRequest{ID: id})
 		if mErr != nil {
-			return itemparam.GetItemResponse{}, mErr
+			return itemparam.GetItemsResponse{}, mErr
 		}
 
 		_ = s.cache.SetMediaURLByMediaID(ctx, id, mediaRes.URL)
@@ -62,7 +62,7 @@ func (s Service) GetItems(ctx context.Context, req itemparam.GetItemRequest) (it
 		})
 	}
 
-	return itemparam.GetItemResponse{
+	return itemparam.GetItemsResponse{
 		Pagination: commonparam.PaginationResponse{
 			PageSize:   req.Pagination.GetPageSize(),
 			PageNumber: req.Pagination.GetPageNumber(),

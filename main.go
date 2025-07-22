@@ -34,7 +34,7 @@ import (
 
 func main() {
 
-	fmt.Println("hello world")
+	fmt.Println("hello worldd")
 	cfg := config.C()
 	m := migrator.New(cfg.Postgres)
 	m.Up()

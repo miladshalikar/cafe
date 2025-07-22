@@ -12,7 +12,7 @@ func (s Service) AddNewItem(ctx context.Context, req itemparam.AddNewItemRequest
 		Title:       req.Title,
 		Description: req.Description,
 		Price:       req.Price,
-		CategoryID:  req.CategoryId,
+		CategoryID:  req.CategoryID,
 		MediaID:     req.MediaID,
 	}
 
