@@ -8,11 +8,19 @@ import (
 
 func (s Service) DeleteCategory(ctx context.Context, req categoryparam.DeleteCategoryRequest) (categoryparam.DeleteCategoryResponse, error) {
 
+	category, mErr := s.repo.GetCategoryByID(ctx, req.ID)
+	if mErr != nil {
+		return categoryparam.DeleteCategoryResponse{}, mErr
+	}
+
 	if cErr := s.repo.DeleteCategory(ctx, req.ID); cErr != nil {
 		return categoryparam.DeleteCategoryResponse{}, cErr
 	}
 
-	if _, dErr := s.Client.DeleteMedia(ctx, mediaparam.DeleteMediaRequest{ID: req.ID}); dErr != nil {
+	if _, dErr := s.Client.DeleteMedia(ctx, mediaparam.DeleteMediaRequest{ID: category.MediaID}); dErr != nil {
+
+		_ = s.repo.UndoDeleteCategory(ctx, req.ID)
+
 		return categoryparam.DeleteCategoryResponse{}, dErr
 	}
 
