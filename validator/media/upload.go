@@ -15,7 +15,6 @@ import (
 func (v Validator) ValidateUploadFile(ctx context.Context, req mediaparam.UploadMediaRequest) (map[string]string, error) {
 
 	if err := validation.ValidateStructWithContext(ctx, &req,
-		validation.Field(&req.Bucket, validation.Required),
 		validation.Field(&req.Size, validation.Max(entity.MaxFileUploadSize)),
 		validation.Field(&req.Filename, validation.By(ValidateFileExtension)),
 	); err != nil {

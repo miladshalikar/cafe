@@ -20,15 +20,10 @@ func (h Handler) UploadMedia(ctx echo.Context) error {
 		return ctx.JSON(http.StatusBadRequest, map[string]string{"message": "is_private must be a valid boolean"})
 	}
 
-	bucket := ctx.FormValue("bucket")
-	if bucket == "" {
-		return ctx.JSON(http.StatusBadRequest, map[string]string{"message": "bucket is required"})
-	}
-
 	req := mediaparam.UploadMediaRequest{
 		FileHeader: file,
 		IsPrivate:  isPrivate,
-		Bucket:     bucket,
+		Bucket:     h.mediaCfg.BucketName,
 	}
 
 	if fieldErrors, err := h.mediaVld.ValidateUploadFile(ctx.Request().Context(), req); err != nil {

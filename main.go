@@ -57,7 +57,7 @@ func main() {
 	mediaDB := mediapostgresql.New(db)
 	mediaVld := mediavalidator.New(mediaDB)
 	mediaSvc := mediaservice.New(objectStorage, mediaDB)
-	mediaHandler := mediahandler.New(mediaSvc, mediaVld, tknSvc, cfg.Token, acl)
+	mediaHandler := mediahandler.New(mediaSvc, mediaVld, tknSvc, cfg.Token, acl, cfg.ObjectStorage)
 
 	rrr := categorypostgresql.New(db)
 	ccache := mediaredis.New(cache)
