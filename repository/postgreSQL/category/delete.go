@@ -27,3 +27,10 @@ func (d *DB) DeleteCategory(ctx context.Context, id uint) error {
 
 	return nil
 }
+
+func (d *DB) UndoDeleteCategory(ctx context.Context, id uint) error {
+
+	query := `UPDATE categories SET deleted_at = NULL WHERE id = $1`
+	_, err := d.conn.ExecContext(ctx, query, id)
+	return err
+}
