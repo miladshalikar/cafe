@@ -7,7 +7,7 @@ import (
 
 func (d *DB) DeleteItem(ctx context.Context, id uint) error {
 
-	query := `UPDATE items SET deleted_at = NOW() WHERE id = 1 AND deleted_at IS NOT NULL`
+	query := `UPDATE items SET deleted_at = NOW() WHERE id = $1 AND deleted_at IS NULL`
 
 	result, err := d.conn.ExecContext(ctx, query, id)
 	if err != nil {

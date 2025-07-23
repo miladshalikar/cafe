@@ -12,8 +12,7 @@ func (v Validator) ValidateAddItem(ctx context.Context, req itemparam.AddNewItem
 		validation.Field(&req.Title, validation.Required, validation.Length(3, 190)),
 		validation.Field(&req.Description, validation.NilOrNotEmpty),
 		validation.Field(&req.Price, validation.Required, validation.Min(0.0)),
-		validation.Field(&req.CategoryID, validation.Required, validation.Min(1)),
-		validation.Field(&req.MediaID, validation.Min(0)),
+		validation.Field(&req.CategoryID, validation.Required),
 	); err != nil {
 		fieldErrors := make(map[string]string)
 		vErr := validation.Errors{}
