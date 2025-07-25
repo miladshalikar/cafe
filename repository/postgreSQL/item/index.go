@@ -86,7 +86,7 @@ func (d *DB) GetItemsWithPaginationAndSearchAndFilter(
 		argIndex++
 	}
 
-	query += fmt.Sprintf(" ORDER BY id DESC LIMIT $%d OFFSET $%d", argIndex, argIndex+1)
+	query += fmt.Sprintf(" LIMIT $%d OFFSET $%d", argIndex, argIndex+1)
 	args = append(args, pagination.GetPageSize(), pagination.GetOffset())
 
 	rows, err := d.conn.QueryContext(ctx, query, args...)
