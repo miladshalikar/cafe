@@ -9,12 +9,12 @@ import (
 
 func (s Service) GetCategories(ctx context.Context, req categoryparam.GetCategoriesRequest) (categoryparam.GetCategoriesResponse, error) {
 
-	total, tErr := s.repo.GetTotalCountCategory(ctx, req.Search.Search)
+	total, tErr := s.repo.GetTotalCountCategoryWithSearch(ctx, req.Search)
 	if tErr != nil {
 		return categoryparam.GetCategoriesResponse{}, tErr
 	}
 
-	categories, cErr := s.repo.GetCategoriesWithPagination(ctx, req.Pagination.GetPageSize(), req.Pagination.GetOffset(), req.Search.Search)
+	categories, cErr := s.repo.GetCategoriesWithPaginationAndSearch(ctx, req.Pagination, req.Search)
 	if cErr != nil {
 		return categoryparam.GetCategoriesResponse{}, cErr
 	}

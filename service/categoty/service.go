@@ -3,6 +3,7 @@ package categoryservice
 import (
 	"context"
 	"github.com/miladshalikar/cafe/entity"
+	commonparam "github.com/miladshalikar/cafe/param/common"
 	mediaparam "github.com/miladshalikar/cafe/param/media"
 )
 
@@ -18,8 +19,8 @@ type Repository interface {
 	UndoDeleteCategory(ctx context.Context, id uint) error
 	GetCategoryByID(ctx context.Context, id uint) (entity.Category, error)
 	UpdateCategory(ctx context.Context, category entity.Category) error
-	GetTotalCountCategory(ctx context.Context, search string) (uint, error)
-	GetCategoriesWithPagination(ctx context.Context, pageSize, offset uint, search string) ([]entity.Category, error)
+	GetTotalCountCategoryWithSearch(ctx context.Context, search commonparam.SearchRequest) (uint, error)
+	GetCategoriesWithPaginationAndSearch(ctx context.Context, pagination commonparam.PaginationRequest, search commonparam.SearchRequest) ([]entity.Category, error)
 }
 
 type Client interface {
