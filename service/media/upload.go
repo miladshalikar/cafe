@@ -13,7 +13,7 @@ import (
 
 func (s Service) UploadMedia(ctx context.Context, req mediaparam.UploadMediaRequest) (mediaparam.UploadMediaResponse, error) {
 
-	fileName := strconv.Itoa(time.Now().Nanosecond()) + filepath.Ext(req.Filename)
+	fileName := strconv.FormatInt(time.Now().UnixNano(), 10) + filepath.Ext(req.Filename)
 
 	file, fErr := req.Open()
 	if fErr != nil {
