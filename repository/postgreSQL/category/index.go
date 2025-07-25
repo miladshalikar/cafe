@@ -4,18 +4,19 @@ import (
 	"context"
 	"fmt"
 	"github.com/miladshalikar/cafe/entity"
+	commonparam "github.com/miladshalikar/cafe/param/common"
 )
 
-func (d *DB) GetTotalCountCategory(ctx context.Context, search string) (uint, error) {
+func (d *DB) GetTotalCountCategoryWithSearch(ctx context.Context, search commonparam.SearchRequest) (uint, error) {
 
 	query := `SELECT COUNT(*) FROM categories WHERE deleted_at IS NULL`
 
 	var count uint
 	var args []interface{}
 
-	if search != "" {
+	if search.Search != "" {
 		query += " AND title ILIKE $1"
-		args = append(args, "%"+search+"%")
+		args = append(args, "%"+search.Search+"%")
 	}
 
 	if err := d.conn.QueryRowContext(ctx, query, args...).Scan(&count); err != nil {
@@ -25,20 +26,20 @@ func (d *DB) GetTotalCountCategory(ctx context.Context, search string) (uint, er
 
 }
 
-func (d *DB) GetCategoriesWithPagination(ctx context.Context, pageSize, offset uint, search string) ([]entity.Category, error) {
+func (d *DB) GetCategoriesWithPaginationAndSearch(ctx context.Context, pagination commonparam.PaginationRequest, search commonparam.SearchRequest) ([]entity.Category, error) {
 
 	query := `SELECT * FROM categories WHERE deleted_at IS NULL`
 	var args []interface{}
 	argIndex := 1
 
-	if search != "" {
+	if search.Search != "" {
 		query += fmt.Sprintf(" AND title ILIKE $%d", argIndex)
-		args = append(args, "%"+search+"%")
+		args = append(args, "%"+search.Search+"%")
 		argIndex++
 	}
 
 	query += fmt.Sprintf(" LIMIT $%d OFFSET $%d", argIndex, argIndex+1)
-	args = append(args, pageSize, offset)
+	args = append(args, pagination.GetPageSize(), pagination.GetOffset())
 
 	rows, err := d.conn.QueryContext(ctx, query, args...)
 	if err != nil {
