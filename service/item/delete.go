@@ -13,15 +13,12 @@ func (s Service) DeleteItem(ctx context.Context, req itemparam.DeleteItemRequest
 		return itemparam.DeleteItemResponse{}, mErr
 	}
 
-	if cErr := s.repo.DeleteItem(ctx, req.ID); cErr != nil {
-		return itemparam.DeleteItemResponse{}, cErr
+	if _, dErr := s.client.DeleteMedia(ctx, mediaparam.DeleteMediaRequest{ID: item.MediaID}); dErr != nil {
+		return itemparam.DeleteItemResponse{}, dErr
 	}
 
-	if _, dErr := s.client.DeleteMedia(ctx, mediaparam.DeleteMediaRequest{ID: item.MediaID}); dErr != nil {
-
-		_ = s.repo.UndoDeleteItem(ctx, req.ID)
-
-		return itemparam.DeleteItemResponse{}, dErr
+	if cErr := s.repo.DeleteItem(ctx, req.ID); cErr != nil {
+		return itemparam.DeleteItemResponse{}, cErr
 	}
 
 	return itemparam.DeleteItemResponse{}, nil
