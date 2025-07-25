@@ -3,6 +3,8 @@ package itemservice
 import (
 	"context"
 	"github.com/miladshalikar/cafe/entity"
+	commonparam "github.com/miladshalikar/cafe/param/common"
+	itemparam "github.com/miladshalikar/cafe/param/item"
 	mediaparam "github.com/miladshalikar/cafe/param/media"
 )
 
@@ -18,8 +20,8 @@ type Repository interface {
 	UndoDeleteItem(ctx context.Context, id uint) error
 	GetItemByID(ctx context.Context, id uint) (entity.Item, error)
 	UpdateItem(ctx context.Context, item entity.Item) error
-	GetTotalCountItem(ctx context.Context, search string) (uint, error)
-	GetItemsWithPagination(ctx context.Context, pageSize, offset uint, search string) ([]entity.Item, error)
+	GetTotalCountItemWithSearchAndFilter(ctx context.Context, search commonparam.SearchRequest, filter itemparam.FilterRequest) (uint, error)
+	GetItemsWithPaginationAndSearchAndFilter(ctx context.Context, pagination commonparam.PaginationRequest, search commonparam.SearchRequest, filter itemparam.FilterRequest) ([]entity.Item, error)
 }
 
 type Client interface {

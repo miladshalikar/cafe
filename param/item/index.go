@@ -5,6 +5,7 @@ import commonparam "github.com/miladshalikar/cafe/param/common"
 type GetItemsRequest struct {
 	Pagination commonparam.PaginationRequest
 	Search     commonparam.SearchRequest
+	Filter     FilterRequest
 }
 
 type GetItemsResponse struct {

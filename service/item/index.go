@@ -9,12 +9,12 @@ import (
 
 func (s Service) GetItems(ctx context.Context, req itemparam.GetItemsRequest) (itemparam.GetItemsResponse, error) {
 
-	total, tErr := s.repo.GetTotalCountItem(ctx, req.Search.Search)
+	total, tErr := s.repo.GetTotalCountItemWithSearchAndFilter(ctx, req.Search, req.Filter)
 	if tErr != nil {
 		return itemparam.GetItemsResponse{}, tErr
 	}
 
-	items, cErr := s.repo.GetItemsWithPagination(ctx, req.Pagination.GetPageSize(), req.Pagination.GetOffset(), req.Search.Search)
+	items, cErr := s.repo.GetItemsWithPaginationAndSearchAndFilter(ctx, req.Pagination, req.Search, req.Filter)
 	if cErr != nil {
 		return itemparam.GetItemsResponse{}, cErr
 	}

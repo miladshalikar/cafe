@@ -4,18 +4,44 @@ import (
 	"context"
 	"fmt"
 	"github.com/miladshalikar/cafe/entity"
+	commonparam "github.com/miladshalikar/cafe/param/common"
+	itemparam "github.com/miladshalikar/cafe/param/item"
 )
 
-func (d *DB) GetTotalCountItem(ctx context.Context, search string) (uint, error) {
+func (d *DB) GetTotalCountItemWithSearchAndFilter(
+	ctx context.Context,
+	search commonparam.SearchRequest,
+	filter itemparam.FilterRequest,
+) (uint, error) {
 
 	query := `SELECT COUNT(*) FROM items WHERE deleted_at IS NULL`
 
 	var count uint
 	var args []interface{}
+	argIndex := 1
 
-	if search != "" {
-		query += " AND title ILIKE $1"
-		args = append(args, "%"+search+"%")
+	if search.Search != "" {
+		query += fmt.Sprintf(" AND title ILIKE $%d", argIndex)
+		args = append(args, "%"+search.Search+"%")
+		argIndex++
+	}
+
+	if filter.CategoryID != 0 {
+		query += fmt.Sprintf(" AND category_id = $%d", argIndex)
+		args = append(args, filter.CategoryID)
+		argIndex++
+	}
+
+	if filter.MinPrice != 0 {
+		query += fmt.Sprintf(" AND price >= $%d", argIndex)
+		args = append(args, filter.MinPrice)
+		argIndex++
+	}
+
+	if filter.MaxPrice != 0 {
+		query += fmt.Sprintf(" AND price <= $%d", argIndex)
+		args = append(args, filter.MaxPrice)
+		argIndex++
 	}
 
 	if err := d.conn.QueryRowContext(ctx, query, args...).Scan(&count); err != nil {
@@ -24,21 +50,44 @@ func (d *DB) GetTotalCountItem(ctx context.Context, search string) (uint, error)
 	return count, nil
 }
 
-func (d *DB) GetItemsWithPagination(ctx context.Context, pageSize uint, offset uint, search string) ([]entity.Item, error) {
+func (d *DB) GetItemsWithPaginationAndSearchAndFilter(
+	ctx context.Context,
+	pagination commonparam.PaginationRequest,
+	search commonparam.SearchRequest,
+	filter itemparam.FilterRequest,
+) ([]entity.Item, error) {
 
 	query := `SELECT * FROM items WHERE deleted_at IS NULL`
 
 	var args []interface{}
 	argIndex := 1
 
-	if search != "" {
+	if search.Search != "" {
 		query += fmt.Sprintf(" AND title ILIKE $%d", argIndex)
-		args = append(args, "%"+search+"%")
+		args = append(args, "%"+search.Search+"%")
 		argIndex++
 	}
 
-	query += fmt.Sprintf(" LIMIT $%d OFFSET $%d", argIndex, argIndex+1)
-	args = append(args, pageSize, offset)
+	if filter.CategoryID != 0 {
+		query += fmt.Sprintf(" AND category_id = $%d", argIndex)
+		args = append(args, filter.CategoryID)
+		argIndex++
+	}
+
+	if filter.MinPrice != 0 {
+		query += fmt.Sprintf(" AND price >= $%d", argIndex)
+		args = append(args, filter.MinPrice)
+		argIndex++
+	}
+
+	if filter.MaxPrice != 0 {
+		query += fmt.Sprintf(" AND price <= $%d", argIndex)
+		args = append(args, filter.MaxPrice)
+		argIndex++
+	}
+
+	query += fmt.Sprintf(" ORDER BY id DESC LIMIT $%d OFFSET $%d", argIndex, argIndex+1)
+	args = append(args, pagination.GetPageSize(), pagination.GetOffset())
 
 	rows, err := d.conn.QueryContext(ctx, query, args...)
 	if err != nil {

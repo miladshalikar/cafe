@@ -22,12 +22,32 @@ func (h Handler) GetItemsHandler(ctx echo.Context) error {
 
 	search := ctx.QueryParam("name")
 
+	CategoryID, cErr := strconv.ParseUint(ctx.QueryParam("category_id"), 10, 64)
+	if cErr != nil {
+		CategoryID = 0
+	}
+
+	minPrice, minErr := strconv.ParseUint(ctx.QueryParam("min_price"), 10, 64)
+	if minErr != nil {
+		minPrice = 0
+	}
+
+	maxPrice, maxErr := strconv.ParseUint(ctx.QueryParam("max_price"), 10, 64)
+	if maxErr != nil {
+		maxPrice = 0
+	}
+
 	req := itemparam.GetItemsRequest{
 		Pagination: commonparam.PaginationRequest{
 			PageSize:   uint(pageSize),
 			PageNumber: uint(pageNumber),
 		},
 		Search: commonparam.SearchRequest{Search: search},
+		Filter: itemparam.FilterRequest{
+			CategoryID: uint(CategoryID),
+			MinPrice:   uint(minPrice),
+			MaxPrice:   uint(maxPrice),
+		},
 	}
 
 	res, err := h.itemSvc.GetItems(ctx.Request().Context(), req)
