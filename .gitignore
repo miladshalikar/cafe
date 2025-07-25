@@ -1,5 +1,7 @@
 *.exe
 *.out
+.env
+
 
 .idea/
 tmp/
