@@ -4,9 +4,11 @@ import (
 	"context"
 	"github.com/miladshalikar/cafe/entity"
 	mediaparam "github.com/miladshalikar/cafe/param/media"
+	"github.com/miladshalikar/cafe/pkg/richerror"
 )
 
 func (s Service) AddMedia(ctx context.Context, req mediaparam.AddMediaRequest) (mediaparam.AddMediaResponse, error) {
+	const op = "mediaservice.AddMedia"
 
 	media := entity.Media{
 		FileName:  req.FileName,
@@ -19,7 +21,7 @@ func (s Service) AddMedia(ctx context.Context, req mediaparam.AddMediaRequest) (
 
 	media, err := s.repository.AddMedia(ctx, media)
 	if err != nil {
-		return mediaparam.AddMediaResponse{}, err
+		return mediaparam.AddMediaResponse{}, richerror.New(op).WithWarpError(err)
 	}
 
 	return mediaparam.AddMediaResponse{}, nil

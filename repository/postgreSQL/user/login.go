@@ -5,11 +5,14 @@ import (
 	"database/sql"
 	"errors"
 	"github.com/miladshalikar/cafe/entity"
+	errmsg "github.com/miladshalikar/cafe/pkg/err_msg"
+	"github.com/miladshalikar/cafe/pkg/richerror"
 )
 
 func (u *UserDB) GetUserByEmail(ctx context.Context, email string) (entity.User, error) {
+	const op = "userpostgresql.GetUserByEmail"
 
-	query := `select * from users where email = $1`
+	query := `SELECT * FROM users WHERE email = $1 AND deleted_at IS NULL`
 
 	row := u.conn.QueryRowContext(ctx, query, email)
 
@@ -17,9 +20,15 @@ func (u *UserDB) GetUserByEmail(ctx context.Context, email string) (entity.User,
 
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return entity.User{}, errors.New("user not found")
+			return entity.User{}, richerror.New(op).
+				WithWarpError(err).
+				WithMessage(errmsg.ErrorMsgNotFound).
+				WithKind(richerror.KindNotFound)
 		}
-		return entity.User{}, err
+		return entity.User{}, richerror.New(op).
+			WithWarpError(err).
+			WithMessage(errmsg.ErrorMsgCantScanQueryResult).
+			WithKind(richerror.KindUnexpected)
 	}
 	return user, nil
 }

@@ -5,19 +5,21 @@ import (
 	"github.com/miladshalikar/cafe/entity"
 	itemparam "github.com/miladshalikar/cafe/param/item"
 	mediaparam "github.com/miladshalikar/cafe/param/media"
+	"github.com/miladshalikar/cafe/pkg/richerror"
 )
 
 func (s Service) UpdateItem(ctx context.Context, req itemparam.UpdateItemRequest) (itemparam.UpdateItemResponse, error) {
+	const op = "itemservice.UpdateCategory"
 
 	currentItem, cErr := s.repo.GetItemByID(ctx, req.ID)
 	if cErr != nil {
-		return itemparam.UpdateItemResponse{}, cErr
+		return itemparam.UpdateItemResponse{}, richerror.New(op).WithWarpError(cErr)
 	}
 
 	if currentItem.MediaID != req.MediaID {
 
 		if _, sErr := s.client.DeleteMedia(ctx, mediaparam.DeleteMediaRequest{ID: currentItem.MediaID}); sErr != nil {
-			return itemparam.UpdateItemResponse{}, sErr
+			return itemparam.UpdateItemResponse{}, richerror.New(op).WithWarpError(sErr)
 		}
 	}
 
@@ -31,11 +33,11 @@ func (s Service) UpdateItem(ctx context.Context, req itemparam.UpdateItemRequest
 	}
 
 	if rErr := s.repo.UpdateItem(ctx, item); rErr != nil {
-		return itemparam.UpdateItemResponse{}, rErr
+		return itemparam.UpdateItemResponse{}, richerror.New(op).WithWarpError(rErr)
 	}
 	mediaURL, uErr := s.client.GetURLMedia(ctx, mediaparam.GetURLRequest{ID: item.MediaID})
 	if uErr != nil {
-		return itemparam.UpdateItemResponse{}, uErr
+		return itemparam.UpdateItemResponse{}, richerror.New(op).WithWarpError(uErr)
 	}
 
 	return itemparam.UpdateItemResponse{

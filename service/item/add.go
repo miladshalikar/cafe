@@ -4,9 +4,11 @@ import (
 	"context"
 	"github.com/miladshalikar/cafe/entity"
 	itemparam "github.com/miladshalikar/cafe/param/item"
+	"github.com/miladshalikar/cafe/pkg/richerror"
 )
 
 func (s Service) AddNewItem(ctx context.Context, req itemparam.AddNewItemRequest) (itemparam.AddNewItemResponse, error) {
+	const op = "itemservice.AddNewItem"
 
 	iItem := entity.Item{
 		Title:       req.Title,
@@ -18,7 +20,7 @@ func (s Service) AddNewItem(ctx context.Context, req itemparam.AddNewItemRequest
 
 	item, iErr := s.repo.AddNewItem(ctx, iItem)
 	if iErr != nil {
-		return itemparam.AddNewItemResponse{}, iErr
+		return itemparam.AddNewItemResponse{}, richerror.New(op).WithWarpError(iErr)
 	}
 
 	return itemparam.AddNewItemResponse{

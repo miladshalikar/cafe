@@ -1,15 +1,18 @@
 package aclservice
 
+import "github.com/miladshalikar/cafe/pkg/richerror"
+
 func (s Service) HasPermission(userID uint, permissionTitle string) (bool, error) {
+	const op = "aclservice.HasPermission"
 
 	permissionIDsList, err := s.repo.GetPermissionIDsByUserID(userID)
 	if err != nil {
-		return false, err
+		return false, richerror.New(op).WithWarpError(err)
 	}
 
-	roleIDsList, err := s.repo.GetRoleIDsByUserID(userID)
-	if err != nil {
-		return false, err
+	roleIDsList, rErr := s.repo.GetRoleIDsByUserID(userID)
+	if rErr != nil {
+		return false, richerror.New(op).WithWarpError(rErr)
 	}
 
 	var allPermissionIDsList []uint
@@ -17,7 +20,7 @@ func (s Service) HasPermission(userID uint, permissionTitle string) (bool, error
 	for _, roleID := range roleIDsList {
 		permissionIDs, pErr := s.repo.GetPermissionIDsByRoleID(roleID)
 		if pErr != nil {
-			return false, pErr
+			return false, richerror.New(op).WithWarpError(pErr)
 		}
 
 		allPermissionIDsList = append(allPermissionIDsList, permissionIDs...)
@@ -25,9 +28,9 @@ func (s Service) HasPermission(userID uint, permissionTitle string) (bool, error
 
 	allPermissionIDsList = append(allPermissionIDsList, permissionIDsList...)
 
-	PermissionID, iDrr := s.repo.GetPermissionIDByTitle(permissionTitle)
-	if iDrr != nil {
-		return false, iDrr
+	PermissionID, iErr := s.repo.GetPermissionIDByTitle(permissionTitle)
+	if iErr != nil {
+		return false, richerror.New(op).WithWarpError(iErr)
 	}
 
 	if hasID(allPermissionIDsList, PermissionID) {

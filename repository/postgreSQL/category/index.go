@@ -5,9 +5,12 @@ import (
 	"fmt"
 	"github.com/miladshalikar/cafe/entity"
 	commonparam "github.com/miladshalikar/cafe/param/common"
+	errmsg "github.com/miladshalikar/cafe/pkg/err_msg"
+	"github.com/miladshalikar/cafe/pkg/richerror"
 )
 
 func (d *DB) GetTotalCountCategoryWithSearch(ctx context.Context, search commonparam.SearchRequest) (uint, error) {
+	const op = "categorypostgresql.GetTotalCountCategoryWithSearch"
 
 	query := `SELECT COUNT(*) FROM categories WHERE deleted_at IS NULL`
 
@@ -20,13 +23,17 @@ func (d *DB) GetTotalCountCategoryWithSearch(ctx context.Context, search commonp
 	}
 
 	if err := d.conn.QueryRowContext(ctx, query, args...).Scan(&count); err != nil {
-		return 0, fmt.Errorf("something went wrong: %w", err)
+		return 0, richerror.New(op).
+			WithWarpError(err).
+			WithMessage(errmsg.ErrorMsgSomethingWentWrong).
+			WithKind(richerror.KindUnexpected)
 	}
 	return count, nil
 
 }
 
 func (d *DB) GetCategoriesWithPaginationAndSearch(ctx context.Context, pagination commonparam.PaginationRequest, search commonparam.SearchRequest) ([]entity.Category, error) {
+	const op = "categorypostgresql.GetCategoriesWithPaginationAndSearch"
 
 	query := `SELECT * FROM categories WHERE deleted_at IS NULL`
 	var args []interface{}
@@ -38,12 +45,16 @@ func (d *DB) GetCategoriesWithPaginationAndSearch(ctx context.Context, paginatio
 		argIndex++
 	}
 
+	query += " ORDER BY id ASC"
 	query += fmt.Sprintf(" LIMIT $%d OFFSET $%d", argIndex, argIndex+1)
 	args = append(args, pagination.GetPageSize(), pagination.GetOffset())
 
 	rows, err := d.conn.QueryContext(ctx, query, args...)
 	if err != nil {
-		return nil, fmt.Errorf("query execution failed: %w", err)
+		return nil, richerror.New(op).
+			WithWarpError(err).
+			WithMessage(errmsg.ErrorMsgSomethingWentWrong).
+			WithKind(richerror.KindUnexpected)
 	}
 	defer rows.Close()
 
@@ -52,12 +63,18 @@ func (d *DB) GetCategoriesWithPaginationAndSearch(ctx context.Context, paginatio
 	for rows.Next() {
 		category, cErr := scanCategory(rows)
 		if cErr != nil {
-			return nil, fmt.Errorf("scanning category failed: %w", err)
+			return nil, richerror.New(op).
+				WithWarpError(err).
+				WithMessage(errmsg.ErrorMsgCantScanQueryResult).
+				WithKind(richerror.KindUnexpected)
 		}
 		categories = append(categories, category)
 	}
 	if rErr := rows.Err(); rErr != nil {
-		return nil, fmt.Errorf("rows iteration error: %w", err)
+		return nil, richerror.New(op).
+			WithWarpError(err).
+			WithMessage(errmsg.ErrorMsgCantScanQueryResult).
+			WithKind(richerror.KindUnexpected)
 	}
 
 	return categories, nil
