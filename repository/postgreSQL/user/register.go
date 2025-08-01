@@ -3,9 +3,12 @@ package userpostgresql
 import (
 	"context"
 	"github.com/miladshalikar/cafe/entity"
+	errmsg "github.com/miladshalikar/cafe/pkg/err_msg"
+	"github.com/miladshalikar/cafe/pkg/richerror"
 )
 
 func (u *UserDB) CreateUser(ctx context.Context, user entity.User) (entity.User, error) {
+	const op = "userpostgresql.CreateUser"
 
 	query := `INSERT INTO users (first_name, last_name, email, phone_number, password)
 				VALUES ($1, $2, $3, $4, $5)
@@ -17,7 +20,8 @@ func (u *UserDB) CreateUser(ctx context.Context, user entity.User) (entity.User,
 	registeredUser, err := scanUser(row)
 
 	if err != nil {
-		return entity.User{}, err
+		return entity.User{}, richerror.New(op).WithWarpError(err).
+			WithMessage(errmsg.ErrorMsgSomethingWentWrong).WithKind(richerror.KindUnexpected)
 	}
 	return registeredUser, nil
 }

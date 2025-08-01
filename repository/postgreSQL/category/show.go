@@ -4,11 +4,13 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"fmt"
 	"github.com/miladshalikar/cafe/entity"
+	errmsg "github.com/miladshalikar/cafe/pkg/err_msg"
+	"github.com/miladshalikar/cafe/pkg/richerror"
 )
 
 func (d *DB) GetCategoryByID(ctx context.Context, id uint) (entity.Category, error) {
+	const op = "categorypostgresql.GetCategoryByID"
 
 	query := `SELECT * FROM categories WHERE id = $1 AND deleted_at IS NULL`
 
@@ -17,9 +19,15 @@ func (d *DB) GetCategoryByID(ctx context.Context, id uint) (entity.Category, err
 	category, err := scanCategory(row)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return entity.Category{}, fmt.Errorf("category with ID %d not found", id)
+			return entity.Category{}, richerror.New(op).
+				WithWarpError(err).
+				WithMessage(errmsg.ErrorMsgNotFound).
+				WithKind(richerror.KindNotFound)
 		}
-		return entity.Category{}, fmt.Errorf("failed to scan category: %w", err)
+		return entity.Category{}, richerror.New(op).
+			WithWarpError(err).
+			WithMessage(errmsg.ErrorMsgCantScanQueryResult).
+			WithKind(richerror.KindUnexpected)
 	}
 
 	return category, nil
@@ -27,6 +35,7 @@ func (d *DB) GetCategoryByID(ctx context.Context, id uint) (entity.Category, err
 }
 
 func (d *DB) CheckCategoryIsExistByID(ctx context.Context, id uint) (bool, error) {
+	const op = "categorypostgresql.CheckCategoryIsExistByID"
 
 	query := `SELECT * FROM categories WHERE id = $1 AND deleted_at IS NULL`
 
@@ -37,7 +46,11 @@ func (d *DB) CheckCategoryIsExistByID(ctx context.Context, id uint) (bool, error
 		if errors.Is(err, sql.ErrNoRows) {
 			return false, nil
 		}
-		return false, fmt.Errorf("failed to scan category: %w", err)
+		return false, richerror.New(op).
+			WithWarpError(err).
+			WithMessage(errmsg.ErrorMsgCantScanQueryResult).
+			WithKind(richerror.KindUnexpected).
+			WithMeta(map[string]interface{}{"id": id})
 	}
 
 	return true, nil

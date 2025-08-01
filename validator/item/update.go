@@ -5,9 +5,12 @@ import (
 	"errors"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	itemparam "github.com/miladshalikar/cafe/param/item"
+	errmsg "github.com/miladshalikar/cafe/pkg/err_msg"
+	"github.com/miladshalikar/cafe/pkg/richerror"
 )
 
 func (v Validator) ValidateUpdateItem(ctx context.Context, req itemparam.UpdateItemRequest) (map[string]string, error) {
+	const op = "itemvalidator.ValidateUpdateItem"
 
 	if err := validation.ValidateStructWithContext(ctx, &req,
 		validation.Field(&req.ID, validation.Required),
@@ -25,7 +28,10 @@ func (v Validator) ValidateUpdateItem(ctx context.Context, req itemparam.UpdateI
 				}
 			}
 		}
-		return fieldErrors, err
+		return fieldErrors, richerror.New(op).WithMessage(errmsg.ErrorMsgInvalidInput).
+			WithKind(richerror.KindInvalid).
+			WithMeta(map[string]interface{}{"req": req}).
+			WithWarpError(err)
 	}
 
 	return nil, nil

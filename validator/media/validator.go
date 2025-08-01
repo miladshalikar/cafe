@@ -2,8 +2,8 @@ package mediavalidator
 
 import (
 	"context"
-	"fmt"
-	validation "github.com/go-ozzo/ozzo-validation/v4"
+	errmsg "github.com/miladshalikar/cafe/pkg/err_msg"
+	"github.com/miladshalikar/cafe/pkg/richerror"
 )
 
 type Validator struct {
@@ -19,16 +19,18 @@ func New(r Repository) Validator {
 }
 
 func (v Validator) checkMediaIsExistByID(ctx context.Context, value any) error {
+	const op = "mediavalidator.checkMediaIsExistByID"
+
 	mediaID, ok := value.(uint)
 	if !ok {
-		return validation.NewError("media_id", "media_id must be a valid unsigned integer")
+		return richerror.New(op).WithMessage("invalid media ID").WithKind(richerror.KindInvalid)
 	}
 	res, err := v.repo.CheckMediaIsExistByID(ctx, mediaID)
 	if err != nil {
-		return validation.NewError("media_id", fmt.Sprintf("failed to check media existence: %w", err))
+		return richerror.New(op).WithWarpError(err).WithMessage(errmsg.ErrorMsgSomethingWentWrong)
 	}
 	if !res {
-		return validation.NewError("media_id", "media with ID %d not found")
+		return richerror.New(op).WithMessage("media not found").WithKind(richerror.KindNotFound)
 	}
 	return nil
 }

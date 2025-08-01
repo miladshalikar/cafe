@@ -4,6 +4,8 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	errmsg "github.com/miladshalikar/cafe/pkg/err_msg"
+	"github.com/miladshalikar/cafe/pkg/richerror"
 )
 
 type UserDB struct {
@@ -15,6 +17,8 @@ func New(c *sql.DB) *UserDB {
 }
 
 func (u *UserDB) PhoneNumberExistInDB(ctx context.Context, phoneNumber string) (bool, error) {
+	const op = "userpostgresql.PhoneNumberExistInDB"
+
 	query := `SELECT * FROM users WHERE phone_number = $1`
 
 	row := u.conn.QueryRowContext(ctx, query, phoneNumber)
@@ -25,12 +29,18 @@ func (u *UserDB) PhoneNumberExistInDB(ctx context.Context, phoneNumber string) (
 		if errors.Is(err, sql.ErrNoRows) {
 			return false, nil
 		}
-		return false, err
+		return false, richerror.New(op).
+			WithWarpError(err).
+			WithMessage(errmsg.ErrorMsgCantScanQueryResult).
+			WithKind(richerror.KindUnexpected).
+			WithMeta(map[string]interface{}{"phoneNumber": phoneNumber})
 	}
 	return true, nil
 }
 
 func (u *UserDB) EmailExistInDB(ctx context.Context, email string) (bool, error) {
+	const op = "userpostgresql.EmailExistInDB"
+
 	query := `SELECT * FROM users WHERE email = $1`
 
 	row := u.conn.QueryRowContext(ctx, query, email)
@@ -41,7 +51,11 @@ func (u *UserDB) EmailExistInDB(ctx context.Context, email string) (bool, error)
 		if errors.Is(err, sql.ErrNoRows) {
 			return false, nil
 		}
-		return false, err
+		return false, richerror.New(op).
+			WithWarpError(err).
+			WithMessage(errmsg.ErrorMsgCantScanQueryResult).
+			WithKind(richerror.KindUnexpected).
+			WithMeta(map[string]interface{}{"email": email})
 	}
 
 	return true, nil

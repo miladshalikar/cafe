@@ -6,6 +6,8 @@ import (
 	"github.com/miladshalikar/cafe/entity"
 	commonparam "github.com/miladshalikar/cafe/param/common"
 	itemparam "github.com/miladshalikar/cafe/param/item"
+	errmsg "github.com/miladshalikar/cafe/pkg/err_msg"
+	"github.com/miladshalikar/cafe/pkg/richerror"
 )
 
 func (d *DB) GetTotalCountItemWithSearchAndFilter(
@@ -13,6 +15,7 @@ func (d *DB) GetTotalCountItemWithSearchAndFilter(
 	search commonparam.SearchRequest,
 	filter itemparam.FilterRequest,
 ) (uint, error) {
+	const op = "itempostgresql.GetTotalCountItemWithSearchAndFilter"
 
 	query := `SELECT COUNT(*) FROM items WHERE deleted_at IS NULL`
 
@@ -45,7 +48,10 @@ func (d *DB) GetTotalCountItemWithSearchAndFilter(
 	}
 
 	if err := d.conn.QueryRowContext(ctx, query, args...).Scan(&count); err != nil {
-		return 0, fmt.Errorf("something went wrong: %w", err)
+		return 0, richerror.New(op).
+			WithWarpError(err).
+			WithMessage(errmsg.ErrorMsgSomethingWentWrong).
+			WithKind(richerror.KindUnexpected)
 	}
 	return count, nil
 }
@@ -56,6 +62,7 @@ func (d *DB) GetItemsWithPaginationAndSearchAndFilter(
 	search commonparam.SearchRequest,
 	filter itemparam.FilterRequest,
 ) ([]entity.Item, error) {
+	const op = "itempostgresql.GetItemsWithPaginationAndSearchAndFilter"
 
 	query := `SELECT * FROM items WHERE deleted_at IS NULL`
 
@@ -86,12 +93,16 @@ func (d *DB) GetItemsWithPaginationAndSearchAndFilter(
 		argIndex++
 	}
 
+	query += " ORDER BY id ASC"
 	query += fmt.Sprintf(" LIMIT $%d OFFSET $%d", argIndex, argIndex+1)
 	args = append(args, pagination.GetPageSize(), pagination.GetOffset())
 
 	rows, err := d.conn.QueryContext(ctx, query, args...)
 	if err != nil {
-		return nil, fmt.Errorf("query execution failed: %w", err)
+		return nil, richerror.New(op).
+			WithWarpError(err).
+			WithMessage(errmsg.ErrorMsgSomethingWentWrong).
+			WithKind(richerror.KindUnexpected)
 	}
 	defer rows.Close()
 
@@ -100,12 +111,18 @@ func (d *DB) GetItemsWithPaginationAndSearchAndFilter(
 	for rows.Next() {
 		item, iErr := scanItem(rows)
 		if iErr != nil {
-			return nil, fmt.Errorf("scanning item failed: %w", err)
+			return nil, richerror.New(op).
+				WithWarpError(err).
+				WithMessage(errmsg.ErrorMsgCantScanQueryResult).
+				WithKind(richerror.KindUnexpected)
 		}
 		items = append(items, item)
 	}
 	if rErr := rows.Err(); rErr != nil {
-		return nil, fmt.Errorf("rows iteration error: %w", err)
+		return nil, richerror.New(op).
+			WithWarpError(err).
+			WithMessage(errmsg.ErrorMsgCantScanQueryResult).
+			WithKind(richerror.KindUnexpected)
 	}
 
 	return items, nil

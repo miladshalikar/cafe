@@ -5,19 +5,21 @@ import (
 	"github.com/miladshalikar/cafe/entity"
 	categoryparam "github.com/miladshalikar/cafe/param/category"
 	mediaparam "github.com/miladshalikar/cafe/param/media"
+	"github.com/miladshalikar/cafe/pkg/richerror"
 )
 
 func (s Service) UpdateCategory(ctx context.Context, req categoryparam.UpdateCategoryRequest) (categoryparam.UpdateCategoryResponse, error) {
+	const op = "categoryservice.UpdateCategory"
 
 	currentCategory, cErr := s.repo.GetCategoryByID(ctx, req.ID)
 	if cErr != nil {
-		return categoryparam.UpdateCategoryResponse{}, cErr
+		return categoryparam.UpdateCategoryResponse{}, richerror.New(op).WithWarpError(cErr)
 	}
 
 	if currentCategory.MediaID != req.MediaID {
 
 		if _, sErr := s.client.DeleteMedia(ctx, mediaparam.DeleteMediaRequest{ID: currentCategory.MediaID}); sErr != nil {
-			return categoryparam.UpdateCategoryResponse{}, sErr
+			return categoryparam.UpdateCategoryResponse{}, richerror.New(op).WithWarpError(sErr)
 		}
 	}
 
@@ -28,11 +30,11 @@ func (s Service) UpdateCategory(ctx context.Context, req categoryparam.UpdateCat
 	}
 
 	if rErr := s.repo.UpdateCategory(ctx, category); rErr != nil {
-		return categoryparam.UpdateCategoryResponse{}, rErr
+		return categoryparam.UpdateCategoryResponse{}, richerror.New(op).WithWarpError(rErr)
 	}
 	mediaURL, uErr := s.client.GetURLMedia(ctx, mediaparam.GetURLRequest{ID: category.MediaID})
 	if uErr != nil {
-		return categoryparam.UpdateCategoryResponse{}, uErr
+		return categoryparam.UpdateCategoryResponse{}, richerror.New(op).WithWarpError(uErr)
 	}
 
 	return categoryparam.UpdateCategoryResponse{

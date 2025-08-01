@@ -2,7 +2,8 @@ package itemvalidator
 
 import (
 	"context"
-	"errors"
+	errmsg "github.com/miladshalikar/cafe/pkg/err_msg"
+	"github.com/miladshalikar/cafe/pkg/richerror"
 )
 
 type Validator struct {
@@ -18,16 +19,18 @@ func New(r Repository) Validator {
 }
 
 func (v Validator) checkItemIsExist(ctx context.Context, value any) error {
+	const op = "itemvalidator.checkItemIsExist"
+
 	itemID, ok := value.(uint)
 	if !ok {
-		return errors.New("itemID should be uint")
+		return richerror.New(op).WithMessage("invalid item ID").WithKind(richerror.KindInvalid)
 	}
 	res, err := v.repo.CheckItemIsExistByID(ctx, itemID)
 	if err != nil {
-		return err
+		return richerror.New(op).WithWarpError(err).WithMessage(errmsg.ErrorMsgSomethingWentWrong)
 	}
 	if !res {
-		return errors.New("item is not exist")
+		return richerror.New(op).WithMessage("item not found").WithKind(richerror.KindNotFound)
 	}
 	return nil
 }

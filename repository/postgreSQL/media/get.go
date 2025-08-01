@@ -4,11 +4,13 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"fmt"
 	"github.com/miladshalikar/cafe/entity"
+	errmsg "github.com/miladshalikar/cafe/pkg/err_msg"
+	"github.com/miladshalikar/cafe/pkg/richerror"
 )
 
 func (d *DB) GetMediaByID(ctx context.Context, id uint) (entity.Media, error) {
+	const op = "mediapostgresql.GetMediaByID"
 
 	query := `SELECT * FROM media WHERE id = $1 AND deleted_at IS NULL`
 
@@ -17,15 +19,22 @@ func (d *DB) GetMediaByID(ctx context.Context, id uint) (entity.Media, error) {
 	media, err := scanMedia(row)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return entity.Media{}, fmt.Errorf("media with ID %d not found", id)
+			return entity.Media{}, richerror.New(op).
+				WithWarpError(err).
+				WithMessage(errmsg.ErrorMsgNotFound).
+				WithKind(richerror.KindNotFound)
 		}
-		return entity.Media{}, fmt.Errorf("failed to scan media: %w", err)
+		return entity.Media{}, richerror.New(op).
+			WithWarpError(err).
+			WithMessage(errmsg.ErrorMsgCantScanQueryResult).
+			WithKind(richerror.KindUnexpected)
 	}
 
 	return media, nil
 }
 
 func (d *DB) CheckMediaIsExistByID(ctx context.Context, id uint) (bool, error) {
+	const op = "mediapostgresql.CheckMediaIsExistByID"
 
 	query := `SELECT * FROM media WHERE id = $1 AND deleted_at IS NULL`
 
@@ -36,7 +45,11 @@ func (d *DB) CheckMediaIsExistByID(ctx context.Context, id uint) (bool, error) {
 		if errors.Is(err, sql.ErrNoRows) {
 			return false, nil
 		}
-		return false, fmt.Errorf("failed to scan media: %w", err)
+		return false, richerror.New(op).
+			WithWarpError(err).
+			WithMessage(errmsg.ErrorMsgCantScanQueryResult).
+			WithKind(richerror.KindUnexpected).
+			WithMeta(map[string]interface{}{"id": id})
 	}
 
 	return true, nil

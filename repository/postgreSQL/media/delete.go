@@ -2,10 +2,12 @@ package mediapostgresql
 
 import (
 	"context"
-	"fmt"
+	errmsg "github.com/miladshalikar/cafe/pkg/err_msg"
+	"github.com/miladshalikar/cafe/pkg/richerror"
 )
 
 func (d *DB) DeleteMedia(ctx context.Context, id uint) error {
+	const op = "mediapostgresql.DeleteMedia"
 
 	query := `UPDATE media
 		SET deleted_at = NOW()
@@ -13,16 +15,25 @@ func (d *DB) DeleteMedia(ctx context.Context, id uint) error {
 
 	result, err := d.conn.ExecContext(ctx, query, id)
 	if err != nil {
-		return err
+		return richerror.New(op).
+			WithWarpError(err).
+			WithMessage(errmsg.ErrorMsgSomethingWentWrong).
+			WithKind(richerror.KindUnexpected)
 	}
 
 	rowsAffected, err := result.RowsAffected()
 	if err != nil {
-		return err
+		return richerror.New(op).
+			WithWarpError(err).
+			WithMessage(errmsg.ErrorMsgSomethingWentWrong).
+			WithKind(richerror.KindUnexpected)
 	}
 
 	if rowsAffected == 0 {
-		return fmt.Errorf("no media found with id %d", id)
+		return richerror.New(op).
+			WithMessage(errmsg.ErrorMsgNotFound).
+			WithKind(richerror.KindNotFound).
+			WithMeta(map[string]interface{}{"id": id})
 	}
 
 	return nil

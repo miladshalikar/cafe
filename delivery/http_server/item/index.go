@@ -4,6 +4,7 @@ import (
 	"github.com/labstack/echo/v4"
 	commonparam "github.com/miladshalikar/cafe/param/common"
 	itemparam "github.com/miladshalikar/cafe/param/item"
+	httpmsg "github.com/miladshalikar/cafe/pkg/http_message"
 	"net/http"
 	"strconv"
 )
@@ -52,7 +53,8 @@ func (h Handler) GetItemsHandler(ctx echo.Context) error {
 
 	res, err := h.itemSvc.GetItems(ctx.Request().Context(), req)
 	if err != nil {
-		return ctx.JSON(http.StatusInternalServerError, err)
+		msg, code := httpmsg.Error(err)
+		return echo.NewHTTPError(code, msg)
 	}
 
 	return ctx.JSON(http.StatusOK, res)

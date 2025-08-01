@@ -2,11 +2,13 @@ package itempostgresql
 
 import (
 	"context"
-	"fmt"
 	"github.com/miladshalikar/cafe/entity"
+	errmsg "github.com/miladshalikar/cafe/pkg/err_msg"
+	"github.com/miladshalikar/cafe/pkg/richerror"
 )
 
 func (d *DB) UpdateItem(ctx context.Context, item entity.Item) error {
+	const op = "itempostgresql.UpdateItem"
 
 	query := `UPDATE items SET 
                  title = $1,
@@ -18,16 +20,25 @@ func (d *DB) UpdateItem(ctx context.Context, item entity.Item) error {
 
 	result, err := d.conn.ExecContext(ctx, query, item.Title, item.Description, item.Price, item.CategoryID, item.MediaID, item.ID)
 	if err != nil {
-		return err
+		return richerror.New(op).
+			WithWarpError(err).
+			WithMessage(errmsg.ErrorMsgSomethingWentWrong).
+			WithKind(richerror.KindUnexpected)
 	}
 
 	rowsAffected, err := result.RowsAffected()
 	if err != nil {
-		return err
+		return richerror.New(op).
+			WithWarpError(err).
+			WithMessage(errmsg.ErrorMsgSomethingWentWrong).
+			WithKind(richerror.KindUnexpected)
 	}
 
 	if rowsAffected == 0 {
-		return fmt.Errorf("no category found with id %d", item.ID)
+		return richerror.New(op).
+			WithMessage(errmsg.ErrorMsgNotFound).
+			WithKind(richerror.KindNotFound).
+			WithMeta(map[string]interface{}{"item": item})
 	}
 
 	return nil
