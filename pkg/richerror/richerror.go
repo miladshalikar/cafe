@@ -93,3 +93,42 @@ func (r RichError) Error() string {
 
 	return r.warpError.Error()
 }
+
+func (r RichError) Op() string {
+	if r.operation != "" {
+		return r.operation
+	}
+	if r.warpError == nil {
+		return ""
+	}
+	var re RichError
+	if errors.As(r.warpError, &re) {
+		return re.Op()
+	}
+	return ""
+}
+
+func (r RichError) WErr() error {
+	if r.warpError == nil {
+		return nil
+	}
+	var re RichError
+	if errors.As(r.warpError, &re) {
+		return re.WErr()
+	}
+	return r.warpError
+}
+
+func (r RichError) Meta() map[string]interface{} {
+	if r.meta != nil {
+		return r.meta
+	}
+	if r.warpError == nil {
+		return nil
+	}
+	var re RichError
+	if errors.As(r.warpError, &re) {
+		return re.Meta()
+	}
+	return nil
+}

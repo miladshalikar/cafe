@@ -9,3 +9,5 @@ tmp/
 env-temp.sh
 .air.toml
 .gitignore
+logs/
+logs.json
