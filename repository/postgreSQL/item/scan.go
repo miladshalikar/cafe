@@ -11,7 +11,7 @@ func scanItem(scanner postgresql.Scanner) (entity.Item, error) {
 	var item entity.Item
 	var mediaID sql.NullInt64
 
-	err := scanner.Scan(&item.ID, &item.Title, &item.Description, &item.Price, &item.CategoryID, &mediaID,
+	err := scanner.Scan(&item.ID, &item.Title, &item.Description, &item.Price, &item.Quantity, &item.CategoryID, &mediaID,
 		&item.CreatedAt, &item.UpdatedAt, &item.DeletedAt)
 
 	if mediaID.Valid {

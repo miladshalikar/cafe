@@ -16,7 +16,7 @@ func (s Service) UpdateItem(ctx context.Context, req itemparam.UpdateItemRequest
 		return itemparam.UpdateItemResponse{}, richerror.New(op).WithWarpError(cErr)
 	}
 
-	if currentItem.MediaID != req.MediaID {
+	if currentItem.MediaID != req.MediaID && req.MediaID != 0 {
 
 		if _, sErr := s.client.DeleteMedia(ctx, mediaparam.DeleteMediaRequest{ID: currentItem.MediaID}); sErr != nil {
 			return itemparam.UpdateItemResponse{}, richerror.New(op).WithWarpError(sErr)

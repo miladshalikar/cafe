@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS items
     title VARCHAR(255) NOT NULL,
     description TEXT,
     price DOUBLE PRECISION NOT NULL,
+    quantity INT,
     category_id INT,
     media_id INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -13,6 +14,10 @@ CREATE TABLE IF NOT EXISTS items
     CONSTRAINT fk_category
         FOREIGN KEY (category_id)
         REFERENCES categories(id)
+        ON DELETE SET NULL,
+    CONSTRAINT fk_media
+    FOREIGN KEY (media_id)
+    REFERENCES media(id)
         ON DELETE SET NULL
 );
 
