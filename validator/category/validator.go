@@ -7,15 +7,20 @@ import (
 )
 
 type Validator struct {
-	repo Repository
+	repo  Repository
+	media Media
 }
 
 type Repository interface {
 	CheckCategoryIsExistByID(ctx context.Context, id uint) (bool, error)
 }
 
-func New(r Repository) Validator {
-	return Validator{repo: r}
+type Media interface {
+	CheckMediaIsExistByID(ctx context.Context, value any) error
+}
+
+func New(r Repository, m Media) Validator {
+	return Validator{repo: r, media: m}
 }
 
 func (v Validator) checkCategoryIsExist(ctx context.Context, value any) error {

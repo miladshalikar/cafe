@@ -18,7 +18,7 @@ func New(r Repository) Validator {
 	return Validator{repo: r}
 }
 
-func (v Validator) checkMediaIsExistByID(ctx context.Context, value any) error {
+func (v Validator) CheckMediaIsExistByID(ctx context.Context, value any) error {
 	const op = "mediavalidator.checkMediaIsExistByID"
 
 	mediaID, ok := value.(uint)

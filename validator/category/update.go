@@ -14,6 +14,7 @@ func (v Validator) ValidateUpdateCategory(ctx context.Context, req categoryparam
 
 	if err := validation.ValidateStructWithContext(ctx, &req,
 		validation.Field(&req.Title, validation.Required, validation.Length(3, 190)),
+		validation.Field(&req.MediaID, validation.When(req.MediaID != 0, validation.WithContext(v.media.CheckMediaIsExistByID))),
 	); err != nil {
 		fieldErrors := make(map[string]string)
 		vErr := validation.Errors{}
