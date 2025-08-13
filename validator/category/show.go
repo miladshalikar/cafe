@@ -13,7 +13,7 @@ func (v Validator) ValidateShowSingleCategory(ctx context.Context, req categoryp
 	const op = "categoryvalidator.ValidateShowSingleCategory"
 
 	if err := validation.ValidateStructWithContext(ctx, &req,
-		validation.Field(&req.ID, validation.Required, validation.WithContext(v.checkCategoryIsExist)),
+		validation.Field(&req.ID, validation.Required, validation.WithContext(v.checkCategoryIsExistByID)),
 	); err != nil {
 		fieldErrors := make(map[string]string)
 		vErr := validation.Errors{}

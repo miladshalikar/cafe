@@ -13,7 +13,7 @@ func (v Validator) ValidateDeleteCategory(ctx context.Context, req categoryparam
 	const op = "categoryvalidator.ValidateDeleteCategory"
 
 	if err := validation.ValidateStructWithContext(ctx, &req,
-		validation.Field(&req.ID, validation.Required, validation.WithContext(v.checkCategoryIsExist)),
+		validation.Field(&req.ID, validation.Required, validation.WithContext(v.checkCategoryIsExistByID)),
 	); err != nil {
 		fieldErrors := make(map[string]string)
 		vErr := validation.Errors{}

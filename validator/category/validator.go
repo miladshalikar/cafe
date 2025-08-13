@@ -2,6 +2,7 @@ package categoryvalidator
 
 import (
 	"context"
+	"github.com/miladshalikar/cafe/entity"
 	errmsg "github.com/miladshalikar/cafe/pkg/err_msg"
 	"github.com/miladshalikar/cafe/pkg/richerror"
 )
@@ -13,6 +14,8 @@ type Validator struct {
 
 type Repository interface {
 	CheckCategoryIsExistByID(ctx context.Context, id uint) (bool, error)
+	CheckCategoryIsExistByTitle(ctx context.Context, title string) (bool, error)
+	GetCategoryByID(ctx context.Context, id uint) (entity.Category, error)
 }
 
 type Media interface {
@@ -23,8 +26,8 @@ func New(r Repository, m Media) Validator {
 	return Validator{repo: r, media: m}
 }
 
-func (v Validator) checkCategoryIsExist(ctx context.Context, value any) error {
-	const op = "categoryvalidator.checkCategoryIsExist"
+func (v Validator) checkCategoryIsExistByID(ctx context.Context, value any) error {
+	const op = "categoryvalidator.checkCategoryIsExistByID"
 
 	categoryID, ok := value.(uint)
 	if !ok {
@@ -36,6 +39,23 @@ func (v Validator) checkCategoryIsExist(ctx context.Context, value any) error {
 	}
 	if !res {
 		return richerror.New(op).WithMessage("category not found").WithKind(richerror.KindNotFound)
+	}
+	return nil
+}
+
+func (v Validator) checkCategoryIsExistByTitle(ctx context.Context, value any) error {
+	const op = "categoryvalidator.checkCategoryIsExistByTitle"
+
+	categoryTitle, ok := value.(string)
+	if !ok {
+		return richerror.New(op).WithMessage("invalid category Title").WithKind(richerror.KindInvalid)
+	}
+	res, err := v.repo.CheckCategoryIsExistByTitle(ctx, categoryTitle)
+	if err != nil {
+		return richerror.New(op).WithWarpError(err).WithMessage(errmsg.ErrorMsgSomethingWentWrong)
+	}
+	if res {
+		return richerror.New(op).WithMessage("category name already exists").WithKind(richerror.KindNotFound)
 	}
 	return nil
 }

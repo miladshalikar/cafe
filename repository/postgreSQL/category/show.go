@@ -55,3 +55,25 @@ func (d *DB) CheckCategoryIsExistByID(ctx context.Context, id uint) (bool, error
 
 	return true, nil
 }
+
+func (d *DB) CheckCategoryIsExistByTitle(ctx context.Context, title string) (bool, error) {
+	const op = "categorypostgresql.CheckCategoryIsExistByTitle"
+
+	query := `SELECT * FROM categories WHERE title = $1 AND deleted_at IS NULL`
+
+	row := d.conn.QueryRowContext(ctx, query, title)
+
+	_, err := scanCategory(row)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return false, nil
+		}
+		return false, richerror.New(op).
+			WithWarpError(err).
+			WithMessage(errmsg.ErrorMsgCantScanQueryResult).
+			WithKind(richerror.KindUnexpected).
+			WithMeta(map[string]interface{}{"title": title})
+	}
+
+	return true, nil
+}

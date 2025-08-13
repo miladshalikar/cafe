@@ -18,6 +18,7 @@ func (v Validator) ValidateAddItem(ctx context.Context, req itemparam.AddNewItem
 		validation.Field(&req.Price, validation.Required, validation.Min(0.0)),
 		validation.Field(&req.Quantity, validation.Required),
 		validation.Field(&req.CategoryID, validation.Required),
+		validation.Field(&req.MediaID, validation.When(req.MediaID != 0, validation.WithContext(v.media.CheckMediaIsExistByID))),
 	); err != nil {
 		fieldErrors := make(map[string]string)
 		vErr := validation.Errors{}
