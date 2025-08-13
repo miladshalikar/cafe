@@ -10,7 +10,7 @@ import (
 func (d *DB) AddNewCategory(ctx context.Context, category entity.Category) (entity.Category, error) {
 	const op = "categorypostgresql.AddNewCategory"
 
-	query := `INSERT INT categories (title, media_id)
+	query := `INSERT INTO categories (title, media_id)
 				VALUES ($1, $2)
 				RETURNING *`
 

@@ -65,12 +65,12 @@ func main() {
 	mediaHandler := mediahandler.New(mediaSvc, mediaVld, tknSvc, cfg.Token, acl, cfg.ObjectStorage)
 
 	categoryDB := categorypostgresql.New(db)
-	categoryVld := categoryvalidator.New(categoryDB)
+	categoryVld := categoryvalidator.New(categoryDB, mediaVld)
 	categorySvc := categoryservice.New(categoryDB, mediaSvc, rCache)
 	categoryHandler := categoryhandler.New(categorySvc, categoryVld, tknSvc, cfg.Token, acl)
 
 	itemDB := itempostgresql.New(db)
-	itemVld := itemvalidator.New(itemDB)
+	itemVld := itemvalidator.New(itemDB, mediaVld)
 	itemSvc := itemservice.New(itemDB, mediaSvc, rCache)
 	itemHandler := itemhandler.New(itemSvc, itemVld, tknSvc, cfg.Token, acl)
 
