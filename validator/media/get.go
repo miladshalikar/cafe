@@ -13,7 +13,7 @@ func (v Validator) ValidateGetFile(ctx context.Context, req mediaparam.GetMediaR
 	const op = "mediavalidator.ValidateGetFile"
 
 	if err := validation.ValidateStructWithContext(ctx, &req,
-		validation.Field(&req.ID, validation.Required, validation.WithContext(v.checkMediaIsExistByID)),
+		validation.Field(&req.ID, validation.Required, validation.WithContext(v.CheckMediaIsExistByID)),
 	); err != nil {
 		fieldErrors := make(map[string]string)
 		vErr := validation.Errors{}
