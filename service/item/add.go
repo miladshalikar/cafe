@@ -14,6 +14,7 @@ func (s Service) AddNewItem(ctx context.Context, req itemparam.AddNewItemRequest
 		Title:       req.Title,
 		Description: req.Description,
 		Price:       req.Price,
+		Quantity:    req.Quantity,
 		CategoryID:  req.CategoryID,
 		MediaID:     req.MediaID,
 	}
@@ -28,6 +29,7 @@ func (s Service) AddNewItem(ctx context.Context, req itemparam.AddNewItemRequest
 		Title:       item.Title,
 		Description: item.Description,
 		Price:       item.Price,
+		Quantity:    item.Quantity,
 		CategoryID:  item.CategoryID,
 		MediaID:     item.MediaID,
 	}, nil
