@@ -16,7 +16,7 @@ func (s Service) UpdateCategory(ctx context.Context, req categoryparam.UpdateCat
 		return categoryparam.UpdateCategoryResponse{}, richerror.New(op).WithWarpError(cErr)
 	}
 
-	if currentCategory.MediaID != req.MediaID {
+	if currentCategory.MediaID != req.MediaID && req.MediaID != 0 {
 
 		if _, sErr := s.client.DeleteMedia(ctx, mediaparam.DeleteMediaRequest{ID: currentCategory.MediaID}); sErr != nil {
 			return categoryparam.UpdateCategoryResponse{}, richerror.New(op).WithWarpError(sErr)
@@ -24,9 +24,13 @@ func (s Service) UpdateCategory(ctx context.Context, req categoryparam.UpdateCat
 	}
 
 	category := entity.Category{
-		ID:      req.ID,
-		Title:   req.Title,
-		MediaID: req.MediaID,
+		ID:    req.ID,
+		Title: req.Title,
+	}
+	if req.MediaID == 0 {
+		category.MediaID = currentCategory.MediaID
+	} else {
+		category.MediaID = req.MediaID
 	}
 
 	if rErr := s.repo.UpdateCategory(ctx, category); rErr != nil {

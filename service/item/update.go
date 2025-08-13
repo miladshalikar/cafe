@@ -30,7 +30,11 @@ func (s Service) UpdateItem(ctx context.Context, req itemparam.UpdateItemRequest
 		Price:       req.Price,
 		Quantity:    req.Quantity,
 		CategoryID:  req.CategoryID,
-		MediaID:     req.MediaID,
+	}
+	if req.MediaID == 0 {
+		item.MediaID = currentItem.MediaID
+	} else {
+		item.MediaID = req.MediaID
 	}
 
 	if rErr := s.repo.UpdateItem(ctx, item); rErr != nil {
