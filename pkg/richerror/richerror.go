@@ -95,9 +95,6 @@ func (r RichError) Error() string {
 }
 
 func (r RichError) Op() string {
-	if r.operation != "" {
-		return r.operation
-	}
 	if r.warpError == nil {
 		return ""
 	}
@@ -105,7 +102,7 @@ func (r RichError) Op() string {
 	if errors.As(r.warpError, &re) {
 		return re.Op()
 	}
-	return ""
+	return r.operation
 }
 
 func (r RichError) WErr() error {
