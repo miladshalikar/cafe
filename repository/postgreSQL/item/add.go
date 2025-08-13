@@ -10,11 +10,11 @@ import (
 func (d *DB) AddNewItem(ctx context.Context, item entity.Item) (entity.Item, error) {
 	const op = "itempostgresql.AddNewItem"
 
-	query := `INSERT INTO items (title, description, price, category_id, media_id) 
-				VALUES ($1, $2, $3, $4, $5) 
+	query := `INSERT INTO items (title, description, price, quantity, category_id, media_id) 
+				VALUES ($1, $2, $3, $4, $5, $6) 
 				RETURNING *`
 
-	row := d.conn.QueryRowContext(ctx, query, item.Title, item.Description, item.Price, item.CategoryID, item.MediaID)
+	row := d.conn.QueryRowContext(ctx, query, item.Title, item.Description, item.Price, item.Quantity, item.CategoryID, item.MediaID)
 
 	addedItem, err := scanItem(row)
 	if err != nil {

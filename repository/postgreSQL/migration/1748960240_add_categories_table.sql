@@ -6,7 +6,11 @@ CREATE TABLE IF NOT EXISTS categories
     media_id INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    deleted_at TIMESTAMP
+    deleted_at TIMESTAMP,
+    CONSTRAINT fk_media
+        FOREIGN KEY (media_id)
+        REFERENCES media(id)
+        ON DELETE SET NULL
 );
 
 -- +migrate Down
