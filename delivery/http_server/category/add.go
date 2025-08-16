@@ -5,6 +5,7 @@ import (
 	categoryparam "github.com/miladshalikar/cafe/param/category"
 	errmsg "github.com/miladshalikar/cafe/pkg/err_msg"
 	httpmsg "github.com/miladshalikar/cafe/pkg/http_message"
+	"github.com/miladshalikar/cafe/pkg/logger"
 	"net/http"
 )
 
@@ -21,7 +22,7 @@ func (h Handler) AddNewCategoryHandler(ctx echo.Context) error {
 
 	if fieldErrors, err := h.categoryVld.ValidateAddCategory(ctx.Request().Context(), req); err != nil {
 		msg, code := httpmsg.Error(err)
-
+		logger.Log(err)
 		return ctx.JSON(code, echo.Map{
 			"message": msg,
 			"errors":  fieldErrors,
@@ -31,6 +32,7 @@ func (h Handler) AddNewCategoryHandler(ctx echo.Context) error {
 	res, err := h.categorySvc.AddNewCategory(ctx.Request().Context(), req)
 	if err != nil {
 		msg, code := httpmsg.Error(err)
+		logger.Log(err)
 		return echo.NewHTTPError(code, msg)
 	}
 	return ctx.JSON(http.StatusCreated, res)

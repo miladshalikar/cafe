@@ -5,6 +5,7 @@ import (
 	commonparam "github.com/miladshalikar/cafe/param/common"
 	itemparam "github.com/miladshalikar/cafe/param/item"
 	httpmsg "github.com/miladshalikar/cafe/pkg/http_message"
+	"github.com/miladshalikar/cafe/pkg/logger"
 	"net/http"
 	"strconv"
 )
@@ -54,6 +55,7 @@ func (h Handler) GetItemsHandler(ctx echo.Context) error {
 	res, err := h.itemSvc.GetItems(ctx.Request().Context(), req)
 	if err != nil {
 		msg, code := httpmsg.Error(err)
+		logger.Log(err)
 		return echo.NewHTTPError(code, msg)
 	}
 

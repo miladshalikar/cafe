@@ -5,6 +5,7 @@ import (
 	categoryparam "github.com/miladshalikar/cafe/param/category"
 	commonparam "github.com/miladshalikar/cafe/param/common"
 	httpmsg "github.com/miladshalikar/cafe/pkg/http_message"
+	"github.com/miladshalikar/cafe/pkg/logger"
 	"net/http"
 	"strconv"
 )
@@ -34,6 +35,7 @@ func (h Handler) GetCategoriesHandler(ctx echo.Context) error {
 	res, err := h.categorySvc.GetCategories(ctx.Request().Context(), req)
 	if err != nil {
 		msg, code := httpmsg.Error(err)
+		logger.Log(err)
 		return echo.NewHTTPError(code, msg)
 	}
 

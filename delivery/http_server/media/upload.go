@@ -5,6 +5,7 @@ import (
 	mediaparam "github.com/miladshalikar/cafe/param/media"
 	errmsg "github.com/miladshalikar/cafe/pkg/err_msg"
 	httpmsg "github.com/miladshalikar/cafe/pkg/http_message"
+	"github.com/miladshalikar/cafe/pkg/logger"
 	"net/http"
 	"strconv"
 )
@@ -34,7 +35,7 @@ func (h Handler) UploadMedia(ctx echo.Context) error {
 
 	if fieldErrors, vErr := h.mediaVld.ValidateUploadFile(ctx.Request().Context(), req); vErr != nil {
 		msg, code := httpmsg.Error(vErr)
-
+		logger.Log(vErr)
 		return ctx.JSON(code, echo.Map{
 			"message": msg,
 			"errors":  fieldErrors,
@@ -44,6 +45,7 @@ func (h Handler) UploadMedia(ctx echo.Context) error {
 	res, mErr := h.mediaSvc.UploadMedia(ctx.Request().Context(), req)
 	if mErr != nil {
 		msg, code := httpmsg.Error(mErr)
+		logger.Log(mErr)
 		return echo.NewHTTPError(code, msg)
 	}
 	return ctx.JSON(http.StatusOK, res)
