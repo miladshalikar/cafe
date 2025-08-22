@@ -7,6 +7,7 @@ import (
 	categoryhandler "github.com/miladshalikar/cafe/delivery/http_server/category"
 	itemhandler "github.com/miladshalikar/cafe/delivery/http_server/item"
 	mediahandler "github.com/miladshalikar/cafe/delivery/http_server/media"
+	paymenthandler "github.com/miladshalikar/cafe/delivery/http_server/payment"
 	userauthhandler "github.com/miladshalikar/cafe/delivery/http_server/user/auth"
 	userprofilehandler "github.com/miladshalikar/cafe/delivery/http_server/user/profile"
 )
@@ -19,6 +20,7 @@ type Server struct {
 	categoryHandler    categoryhandler.Handler
 	mediaHandler       mediahandler.Handler
 	itemHandler        itemhandler.Handler
+	paymentHandler     paymenthandler.Handler
 }
 
 func New(config config.Config,
@@ -27,6 +29,7 @@ func New(config config.Config,
 	categoryHandler categoryhandler.Handler,
 	mediaHandler mediahandler.Handler,
 	itemHandler itemhandler.Handler,
+	paymentHandler paymenthandler.Handler,
 ) Server {
 	return Server{
 		config:             config,
@@ -36,6 +39,7 @@ func New(config config.Config,
 		categoryHandler:    categoryHandler,
 		mediaHandler:       mediaHandler,
 		itemHandler:        itemHandler,
+		paymentHandler:     paymentHandler,
 	}
 }
 
@@ -45,6 +49,7 @@ func (s Server) Serve() {
 	s.categoryHandler.SetRoutes(s.Router)
 	s.mediaHandler.SetRoutes(s.Router)
 	s.itemHandler.SetRoutes(s.Router)
+	s.paymentHandler.SetRoutes(s.Router)
 
 	address := fmt.Sprintf(":%d", s.config.Server.Port)
 	fmt.Printf("start echo server on %s\n", address)

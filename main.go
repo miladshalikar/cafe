@@ -8,6 +8,7 @@ import (
 	categoryhandler "github.com/miladshalikar/cafe/delivery/http_server/category"
 	itemhandler "github.com/miladshalikar/cafe/delivery/http_server/item"
 	mediahandler "github.com/miladshalikar/cafe/delivery/http_server/media"
+	paymenthandler "github.com/miladshalikar/cafe/delivery/http_server/payment"
 	userauthhandler "github.com/miladshalikar/cafe/delivery/http_server/user/auth"
 	userprofilehandler "github.com/miladshalikar/cafe/delivery/http_server/user/profile"
 	"github.com/miladshalikar/cafe/repository/cache/redis"
@@ -18,17 +19,20 @@ import (
 	categorypostgresql "github.com/miladshalikar/cafe/repository/postgreSQL/category"
 	itempostgresql "github.com/miladshalikar/cafe/repository/postgreSQL/item"
 	mediapostgresql "github.com/miladshalikar/cafe/repository/postgreSQL/media"
+	paymentpostgresql "github.com/miladshalikar/cafe/repository/postgreSQL/payment"
 	userpostgresql "github.com/miladshalikar/cafe/repository/postgreSQL/user"
 	aclservice "github.com/miladshalikar/cafe/service/acl"
 	categoryservice "github.com/miladshalikar/cafe/service/categoty"
 	itemservice "github.com/miladshalikar/cafe/service/item"
 	mediaservice "github.com/miladshalikar/cafe/service/media"
+	paymentservice "github.com/miladshalikar/cafe/service/payment"
 	userauthservice "github.com/miladshalikar/cafe/service/user/authservice"
 	userprofileservice "github.com/miladshalikar/cafe/service/user/profile"
 	usertokenauthservice "github.com/miladshalikar/cafe/service/user/token"
 	categoryvalidator "github.com/miladshalikar/cafe/validator/category"
 	itemvalidator "github.com/miladshalikar/cafe/validator/item"
 	mediavalidator "github.com/miladshalikar/cafe/validator/media"
+	paymentvalidator "github.com/miladshalikar/cafe/validator/payment"
 	userauthvalidator "github.com/miladshalikar/cafe/validator/user/auth"
 )
 
@@ -74,6 +78,11 @@ func main() {
 	itemSvc := itemservice.New(itemDB, mediaSvc, rCache)
 	itemHandler := itemhandler.New(itemSvc, itemVld, tknSvc, cfg.Token, acl)
 
-	echoServer := httpserver.New(cfg, userHandler, ProfileHandler, categoryHandler, mediaHandler, itemHandler)
+	paymentDB := paymentpostgresql.New(db)
+	paymentVld := paymentvalidator.New(paymentDB)
+	paymentSvc := paymentservice.New(paymentDB)
+	paymentHandler := paymenthandler.New(paymentSvc, paymentVld, tknSvc, cfg.Token)
+
+	echoServer := httpserver.New(cfg, userHandler, ProfileHandler, categoryHandler, mediaHandler, itemHandler, paymentHandler)
 	echoServer.Serve()
 }
