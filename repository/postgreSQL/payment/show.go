@@ -1,0 +1,56 @@
+package paymentpostgresql
+
+import (
+	"context"
+	"database/sql"
+	"errors"
+	"github.com/miladshalikar/cafe/entity"
+	errmsg "github.com/miladshalikar/cafe/pkg/err_msg"
+	"github.com/miladshalikar/cafe/pkg/richerror"
+)
+
+func (d *DB) GetPaymentByID(ctx context.Context, paymentID uint) (entity.Payment, error) {
+	const op = "paymentpostgresql.GetPaymentByID"
+
+	query := `SELECT * FROM payments WHERE id = $1 AND deleted_at IS NULL`
+
+	row := d.conn.QueryRowContext(ctx, query, paymentID)
+
+	payment, err := scanPayment(row)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return entity.Payment{}, richerror.New(op).
+				WithWarpError(err).
+				WithMessage(errmsg.ErrorMsgNotFound).
+				WithKind(richerror.KindNotFound)
+		}
+		return entity.Payment{}, richerror.New(op).
+			WithWarpError(err).
+			WithMessage(errmsg.ErrorMsgCantScanQueryResult).
+			WithKind(richerror.KindUnexpected)
+	}
+
+	return payment, nil
+}
+
+func (d *DB) CheckPaymentIsExistByID(ctx context.Context, id uint) (bool, error) {
+	const op = "paymentpostgresql.CheckCategoryIsExistByID"
+
+	query := `SELECT * FROM payments WHERE id = $1 AND deleted_at IS NULL`
+
+	row := d.conn.QueryRowContext(ctx, query, id)
+
+	_, err := scanPayment(row)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return false, nil
+		}
+		return false, richerror.New(op).
+			WithWarpError(err).
+			WithMessage(errmsg.ErrorMsgCantScanQueryResult).
+			WithKind(richerror.KindUnexpected).
+			WithMeta(map[string]interface{}{"id": id})
+	}
+
+	return true, nil
+}
